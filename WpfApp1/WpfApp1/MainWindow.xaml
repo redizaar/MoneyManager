@@ -5,21 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="367.636" Width="577.907">
-    <Grid HorizontalAlignment="Left" Width="570">
+        Title="MainWindow" Height="367.636" Width="720.907">
+    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="97*"/>
             <ColumnDefinition Width="105*"/>
             <ColumnDefinition Width="83*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Import Transactions" HorizontalAlignment="Left" Margin="0.933,10,0,0" VerticalAlignment="Top" Width="153" RenderTransformOrigin="1.43,-2.253" Height="48" Background="#FFFFFF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Click="Button_Click" Grid.Column="1"/>
-        <Label x:Name="LatestImportDate_Label" Content="Label" HorizontalAlignment="Left" Margin="0.933,77,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
-        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="0.933,109,0,0" VerticalAlignment="Top" Width="65" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+        <Button Content="Import " HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Click="Button_Click" Grid.Column="2"/>
+        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="60,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
+        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="24,174,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Grid.Column="1">
             <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="151"/>
             <ComboBoxItem Content="K&amp;H" HorizontalAlignment="Left" Width="151"/>
         </ComboBox>
-        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="78.933,109,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Click="FileBrowser_Click" Grid.Column="1"/>
-        <Label x:Name="FolderAddressLabel" Content="Label" HorizontalAlignment="Left" Margin="9.933,147,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Grid.ColumnSpan="2" Grid.Column="1"/>
-
+        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Click="FileBrowser_Click" Grid.Column="1" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" />
+        <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="60,274,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Button Content="Go Back" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#FFFFFF66" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12"/>
+        <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="123,174,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33" Grid.ColumnSpan="2"/>
+        <Button Content="Transactions" HorizontalAlignment="Left" Margin="58,91,0,0" VerticalAlignment="Top" Width="123" Background="#FF66FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14"/>
+        <Button Content="Exit" HorizontalAlignment="Left" Margin="197,91,0,0" VerticalAlignment="Top" Width="123" Background="#FFFFFF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Grid.ColumnSpan="2"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="10,43,0,0" VerticalAlignment="Top" Width="692" Grid.ColumnSpan="3">
+            <Label Content="Money Manager" Margin="266,1,222,-1" FontFamily="Bookman Old Style" FontSize="22" BorderBrush="Gray" Foreground="Gray"/>
+        </Border>
+        <Image Grid.Column="1" HorizontalAlignment="Left" Height="43" Margin="106,0,0,0" VerticalAlignment="Top" Width="68" Source="dollar_uj2.jpg"/>
     </Grid>
 </Window>

@@ -13,6 +13,8 @@ namespace WpfApp1
         private ImportReadIn bankHanlder=null;
         public ReadInOTP(ImportReadIn importreadin,Workbook workbook, Worksheet worksheet)
         {
+            worksheet = workbook.Worksheets[1];
+
             this.bankHanlder = importreadin;
             transactions = new List<Transaction>();
             int i = 1;
