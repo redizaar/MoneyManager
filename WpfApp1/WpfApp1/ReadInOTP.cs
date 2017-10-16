@@ -11,9 +11,10 @@ namespace WpfApp1
     {
         private List<Transaction> transactions;
         private ImportReadIn bankHanlder=null;
-        public ReadInOTP(ImportReadIn importreadin,Workbook workbook, Worksheet worksheet)
+        public ReadInOTP(ImportReadIn importReadin,Workbook workbook, Worksheet worksheet)
         {
-            this.bankHanlder = importreadin;
+            worksheet = workbook.Worksheets[1];
+            this.bankHanlder = importReadin;
             transactions = new List<Transaction>();
             int i = 1;
             int egyenleg_rn=0;

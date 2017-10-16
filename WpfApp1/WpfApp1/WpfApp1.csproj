@@ -54,6 +54,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExportTransactions.cs" />
+    <Compile Include="ReadInFHB.cs" />
     <Compile Include="ReadInOTP.cs" />
     <Compile Include="Transaction.cs" />
     <Page Include="MainWindow.xaml">
@@ -124,6 +126,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="dollar_uj2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

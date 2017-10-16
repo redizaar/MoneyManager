@@ -25,6 +25,7 @@ namespace WpfApp1
             banksComboBox.Visibility = System.Windows.Visibility.Hidden;
             FileBrowser.Visibility = System.Windows.Visibility.Hidden;
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
+            HelpChooseLabel.Visibility = System.Windows.Visibility.Hidden;
             if (LatestImportDate_Label.Content.Equals("Label"))
             {
                 LatestImportDate_Label.Content = "You haven't imported yet!";
@@ -34,6 +35,7 @@ namespace WpfApp1
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             banksComboBox.Visibility= System.Windows.Visibility.Visible;
+            HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
