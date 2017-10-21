@@ -18,29 +18,27 @@ namespace WpfApp1
             transactions = new List<Transaction>();
             int i = 1;
             int egyenleg_rn=0;
-            string todaysDate = DateTime.Now.ToString("yyyy-MM-dd"); ;
             string transactionDate = "";
             int osszeg = 0;
             int new_egyenleg = 0;
             bool need_values = true;
             string osszeg_string = "";
             string new_balance_string = "";
+            string accountNumber = worksheet.Cells[3,2].Value.ToString();
             i = 15;
+
             while (worksheet.Cells[i, 1].Value != null)
             {
                 //egyenleg += osszeg;
                 while (need_values)
                 {
-                    int j = 3;
-                    transactionDate = worksheet.Cells[i, j].Value.ToString();
-                    j = j + 2;
-                    osszeg_string = worksheet.Cells[i, j].Value.ToString();
-                    j++;
+                    transactionDate = worksheet.Cells[i, 3].Value.ToString();
+                    osszeg_string = worksheet.Cells[i, 5].Value.ToString();
                     if(i>15)
                     {
                         egyenleg_rn = new_egyenleg;
                     }
-                    new_balance_string = worksheet.Cells[i, j].Value.ToString();
+                    new_balance_string = worksheet.Cells[i, 6].Value.ToString();
                     if (i==15)
                     {
                         egyenleg_rn = int.Parse(new_balance_string);
@@ -51,7 +49,7 @@ namespace WpfApp1
                 }
                 i++;
                 need_values = true;
-                transactions.Add(new Transaction(egyenleg_rn, transactionDate, osszeg, new_egyenleg));
+                transactions.Add(new Transaction(egyenleg_rn, transactionDate, osszeg, new_egyenleg,accountNumber));
             }
             bankHanlder.addTransactions(transactions);
         }

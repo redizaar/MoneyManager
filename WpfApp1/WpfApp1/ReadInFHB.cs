@@ -16,12 +16,13 @@ namespace WpfApp1
             worksheet = workbook.Worksheets[1];
             this.bankHanlder = importReadin;
             transactions = new List<Transaction>();
-            string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
 
             int i = 20;
             string transactionDate = "";
             string osszegString = "";
             string egyenlegString = "";
+            string accountNumberExtra = worksheet.Cells[8, 2].Value.ToString();
+            string accountNumber = accountNumberExtra.Substring(0, 25); //substraction the HUF word
             int osszeg=0;
             int currentEgyenleg = 0;
             while ((worksheet.Cells[i, 1].Value != null) || (worksheet.Cells[i+1,1].Value!=null))//interesing FHB file..
@@ -102,7 +103,7 @@ namespace WpfApp1
                             }
                         }
                     }
-                    transactions.Add(new Transaction(currentEgyenleg, todaysDate, osszeg, currentEgyenleg += osszeg));
+                    transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, currentEgyenleg += osszeg,accountNumber));
                 }
                 i++;
             }

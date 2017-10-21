@@ -56,7 +56,9 @@
     </ApplicationDefinition>
     <Compile Include="ExportTransactions.cs" />
     <Compile Include="ReadInFHB.cs" />
+    <Compile Include="ReadInKandH.cs" />
     <Compile Include="ReadInOTP.cs" />
+    <Compile Include="SavedTransactions.cs" />
     <Compile Include="Transaction.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

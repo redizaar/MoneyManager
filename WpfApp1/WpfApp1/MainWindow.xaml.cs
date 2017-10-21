@@ -22,6 +22,9 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+
+            startUpReadIn();
+
             banksComboBox.Visibility = System.Windows.Visibility.Hidden;
             FileBrowser.Visibility = System.Windows.Visibility.Hidden;
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
@@ -31,7 +34,11 @@ namespace WpfApp1
                 LatestImportDate_Label.Content = "You haven't imported yet!";
             }
         }
-
+        private void startUpReadIn()
+        {
+            //reading in the already saved transactions
+            new SavedTransactions();
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             banksComboBox.Visibility= System.Windows.Visibility.Visible;
