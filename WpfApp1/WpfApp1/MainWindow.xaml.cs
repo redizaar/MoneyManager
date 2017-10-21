@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +21,10 @@ namespace WpfApp1
     
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
 
             startUpReadIn();
@@ -34,6 +38,13 @@ namespace WpfApp1
                 LatestImportDate_Label.Content = "You haven't imported yet!";
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private void startUpReadIn()
         {
             //reading in the already saved transactions
@@ -54,7 +65,6 @@ namespace WpfApp1
                 FileBrowser.Visibility = System.Windows.Visibility.Visible;
             }
         }
-
         private void FileBrowser_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
