@@ -14,8 +14,8 @@ namespace WpfApp1
         List<Transaction> transactions;
 
         _Application excel = new _Excel.Application();
-        Workbook ReadWorkbook,WriteWorkbook;
-        Worksheet ReadWorksheet,WriteWorksheet;
+        Workbook ReadWorkbook;
+        Worksheet ReadWorksheet;
         public ImportReadIn(string bankName,string path)
         {
             this.path = path;
@@ -29,6 +29,10 @@ namespace WpfApp1
             else if (bankName.Equals("FHB"))
             {
                 new ReadInFHB(this, ReadWorkbook, ReadWorksheet);
+            }
+            else if(bankName.Equals("K&H"))
+            {
+                new ReadInKandH(this, ReadWorkbook, ReadWorksheet);
             }
         }
         ~ImportReadIn()
