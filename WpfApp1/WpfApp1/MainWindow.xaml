@@ -12,14 +12,14 @@
             <ColumnDefinition Width="105*"/>
             <ColumnDefinition Width="83*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Import " HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Click="Button_Click" Grid.Column="2"/>
+        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Grid.Column="2" Command="{Binding Path=ImportPushed}"/>
         <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="60,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
         <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="24,174,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Grid.Column="1">
             <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="151"/>
             <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="151"/>
             <ComboBoxItem Content="K&amp;H"/>
         </ComboBox>
-        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Click="FileBrowser_Click" Grid.Column="1" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" />
+        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Grid.Column="1" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" Command="{Binding Path=OpenFilePushed}"/>
         <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="60,274,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Grid.Column="1" Grid.ColumnSpan="2"/>
         <Button Content="Go Back" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#FFFFFF66" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12"/>
         <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="123,174,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33" Grid.ColumnSpan="2"/>
