@@ -1,34 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-
 namespace WpfApp1
 {
-    
-    public partial class MainWindow : Window
+    public partial class MainWindow : INotifyPropertyChanged
     {
+        private ButtonCommands btnCommand;
 
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
 
+            
             startUpReadIn();
-
             banksComboBox.Visibility = System.Windows.Visibility.Hidden;
             FileBrowser.Visibility = System.Windows.Visibility.Hidden;
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
@@ -39,6 +27,27 @@ namespace WpfApp1
             }
         }
 
+        public ButtonCommands ImportPushed
+        {
+            get
+            {
+                //if(btnCommand==null)
+                //{
+                    btnCommand = new ButtonCommands(ImportButton.Content.ToString(),this);
+                //}
+
+                return btnCommand;
+            }
+        }
+        public ButtonCommands OpenFilePushed
+        {
+            get
+            {
+                btnCommand = new ButtonCommands(FileBrowser.Content.ToString(), this);
+
+                return btnCommand;
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -50,12 +59,13 @@ namespace WpfApp1
             //reading in the already saved transactions
             new SavedTransactions();
         }
+        /*
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             banksComboBox.Visibility= System.Windows.Visibility.Visible;
             HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
         }
-
+        */
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             String refreshDate=DateTime.Now.ToString("yyyy-MM-dd");
@@ -65,6 +75,7 @@ namespace WpfApp1
                 FileBrowser.Visibility = System.Windows.Visibility.Visible;
             }
         }
+        /*
         private void FileBrowser_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -77,9 +88,57 @@ namespace WpfApp1
             }
             getTransactions(banksComboBox.Text,FolderAddressLabel.Content.ToString());
         }
-        private void getTransactions(string bankName,string folderAddress)
+        */
+        public void getTransactions(string bankName,string folderAddress)
         {
             new ImportReadIn(bankName, folderAddress);
+        }
+    }
+    public class ButtonCommands : ICommand
+    {
+        private string buttonContent;
+        private MainWindow mainWindow;
+        public ButtonCommands(string buttonContent,MainWindow mainWindow)
+        {
+            this.buttonContent = buttonContent;
+            this.mainWindow = mainWindow;
+
+            this.mainWindow.PropertyChanged += new PropertyChangedEventHandler(test_PropertyChanged);
+        }
+        private void test_PropertyChanged(object sender,PropertyChangedEventArgs e)
+        {
+            if(CanExecuteChanged!=null)
+            {
+                CanExecuteChanged(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter)
+        {
+            //todo
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+           if(buttonContent.Equals("Import"))
+            {
+                mainWindow.banksComboBox.Visibility = System.Windows.Visibility.Visible;
+                mainWindow.HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
+            }
+           else if(buttonContent.Equals("Open File"))
+            {
+                Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+                dlg.DefaultExt = ".xls";
+                dlg.Filter = "Excel files (*.xls)|*.xls|Excel Files (*.xlsx)|*.xlsx|Excel Files (*.xlsm)|*.xlsm";
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    mainWindow.FolderAddressLabel.Content = dlg.FileName;
+                }
+                mainWindow.getTransactions(mainWindow.banksComboBox.Text, mainWindow.FolderAddressLabel.Content.ToString());
+            }
         }
     }
 }

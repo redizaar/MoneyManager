@@ -16,23 +16,26 @@ namespace WpfApp1
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
-        public ImportReadIn(string bankName,string path)
+        public ImportReadIn(string bankName, string path)
         {
             this.path = path;
             this.bankName = bankName;
-            ReadWorkbook = excel.Workbooks.Open(path);
-            ReadWorksheet = ReadWorkbook.Worksheets[1];
-            if (bankName.Equals("OTP"))
+            if (path != "FolderAdress")//a path wasn't choosen
             {
-                new ReadInOTP(this, ReadWorkbook, ReadWorksheet);
-            }
-            else if (bankName.Equals("FHB"))
-            {
-                new ReadInFHB(this, ReadWorkbook, ReadWorksheet);
-            }
-            else if(bankName.Equals("K&H"))
-            {
-                new ReadInKandH(this, ReadWorkbook, ReadWorksheet);
+                ReadWorkbook = excel.Workbooks.Open(path);
+                ReadWorksheet = ReadWorkbook.Worksheets[1];
+                if (bankName.Equals("OTP"))
+                {
+                    new ReadInOTP(this, ReadWorkbook, ReadWorksheet);
+                }
+                else if (bankName.Equals("FHB"))
+                {
+                    new ReadInFHB(this, ReadWorkbook, ReadWorksheet);
+                }
+                else if (bankName.Equals("K&H"))
+                {
+                    new ReadInKandH(this, ReadWorkbook, ReadWorksheet);
+                }
             }
         }
         ~ImportReadIn()

@@ -17,6 +17,7 @@ namespace WpfApp1
 
         public SavedTransactions()
         {
+            savedTransactions = new List<Transaction>();
             ReadWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             ReadWorksheet = ReadWorkbook.Worksheets[1];
             int i = 2;
@@ -49,6 +50,7 @@ namespace WpfApp1
                 savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber));
                 i++;
             }
+            Console.WriteLine(savedTransactions.Count);
         }
         public static List<Transaction> getSavedTransactions()
         {

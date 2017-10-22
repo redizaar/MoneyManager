@@ -15,8 +15,9 @@ namespace WpfApp1
         _Application excel = new _Excel.Application();
         public ExportTransactions(List<Transaction> transactions)
         {
-
+            //check if the transaction is already exported or not
             List<Transaction> neededTransactions=newTransactions(transactions);
+
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
             if (neededTransactions != null)
@@ -63,35 +64,48 @@ namespace WpfApp1
                 return;
             }
         }
+        //check if the transaction is already exported or not
         private List<Transaction> newTransactions(List<Transaction> importedTransactions)
         {
             List<Transaction> savedTransactions = SavedTransactions.getSavedTransactions();
             List<Transaction> neededTransactions=new List<Transaction>();
             string accountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
-            if (savedTransactions.Count != 0)
+            if (savedTransactions.Count != 0)//if the export file is empty we don't scan it
             {
                 List<Transaction> tempTransactions = new List<Transaction>();
                 foreach (var saved in savedTransactions)
                 {
+                   //egy külön listába tesszük azokat az elemeket a már elmentet tranzakciókból ahol a bankszámlaszám
+                   //megegyezik az importálandó bankszámlaszámmal
                    if(saved.getAccountNumber().Equals(accountNumber))
                     {
                         tempTransactions.Add(saved);
                     }
                 }
-                foreach (var saved in tempTransactions)
+                if (tempTransactions.Count != 0)//ha nincs olyan már elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
                 {
                     foreach (var imported in importedTransactions)
                     {
-                        if(!(saved.getTransactionDate().Equals(imported.getTransactionDate()) && 
-                                saved.getTransactionPrice().Equals(imported.getTransactionPrice()) && 
-                                saved.getBalance_rn()==imported.getBalance_rn()))
+                        bool redundant = false;
+                        foreach (var saved in tempTransactions)
                         {
+                            if (saved.getTransactionDate().Equals(imported.getTransactionDate()) &&
+                                    saved.getTransactionPrice().Equals(imported.getTransactionPrice()) &&
+                                    saved.getBalance_rn() == imported.getBalance_rn())
+                            {
+                                redundant = true;
+                                break;
+                            }
+                        }
+                        if(redundant==false)
+                        {
+                            Console.WriteLine("nem egyezett");
                             neededTransactions.Add(imported);
                         }
-                        
                     }
+                    return neededTransactions;
                 }
-                return neededTransactions;
+                return importedTransactions;
             }
             else
             {
