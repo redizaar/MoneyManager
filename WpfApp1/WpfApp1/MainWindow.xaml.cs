@@ -21,6 +21,8 @@ namespace WpfApp1
             FileBrowser.Visibility = System.Windows.Visibility.Hidden;
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
             HelpChooseLabel.Visibility = System.Windows.Visibility.Hidden;
+            LatestImportDate_Label.Visibility = System.Windows.Visibility.Hidden;
+
             if (LatestImportDate_Label.Content.Equals("Label"))
             {
                 LatestImportDate_Label.Content = "You haven't imported yet!";
@@ -59,13 +61,6 @@ namespace WpfApp1
             //reading in the already saved transactions
             new SavedTransactions();
         }
-        /*
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            banksComboBox.Visibility= System.Windows.Visibility.Visible;
-            HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
-        }
-        */
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             String refreshDate=DateTime.Now.ToString("yyyy-MM-dd");
@@ -75,23 +70,14 @@ namespace WpfApp1
                 FileBrowser.Visibility = System.Windows.Visibility.Visible;
             }
         }
-        /*
-        private void FileBrowser_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".xls";
-            dlg.Filter = "Excel files (*.xls)|*.xls|Excel Files (*.xlsx)|*.xlsx|Excel Files (*.xlsm)|*.xlsm";
-            Nullable<bool> result = dlg.ShowDialog();
-            if (result == true)
-            {
-                FolderAddressLabel.Content = dlg.FileName;
-            }
-            getTransactions(banksComboBox.Text,FolderAddressLabel.Content.ToString());
-        }
-        */
         public void getTransactions(string bankName,string folderAddress)
         {
             new ImportReadIn(bankName, folderAddress);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Content = new TransactionMain();
         }
     }
     public class ButtonCommands : ICommand
@@ -138,6 +124,7 @@ namespace WpfApp1
                     mainWindow.FolderAddressLabel.Content = dlg.FileName;
                 }
                 mainWindow.getTransactions(mainWindow.banksComboBox.Text, mainWindow.FolderAddressLabel.Content.ToString());
+                mainWindow.LatestImportDate_Label.Visibility = System.Windows.Visibility.Visible;
             }
         }
     }

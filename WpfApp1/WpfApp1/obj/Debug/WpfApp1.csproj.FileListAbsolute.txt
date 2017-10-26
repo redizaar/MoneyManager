@@ -14,3 +14,5 @@ C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\WpfApp1.csproj.CoreCompile
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\WpfApp1.exe
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\WpfApp1.pdb
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\WpfApp1.csproj.ResolveComReference.cache
+C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\TransactionMain.g.cs
+C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\TransactionMain.baml
