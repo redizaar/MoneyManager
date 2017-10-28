@@ -50,7 +50,6 @@ namespace WpfApp1
                 savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber));
                 i++;
             }
-            Console.WriteLine(savedTransactions.Count);
         }
         public static List<Transaction> getSavedTransactions()
         {

@@ -21,19 +21,22 @@
             <Label Content="Money Manager" Margin="266,1,222,-1" FontFamily="Bookman Old Style" FontSize="22" BorderBrush="Gray" Foreground="Gray"/>
         </Border>
         <Image Grid.Column="1" HorizontalAlignment="Left" Height="43" Margin="106,0,0,0" VerticalAlignment="Top" Width="68" Source="dollar_uj2.jpg"/>
-        <DataGrid Name="TransactionTable" AutoGenerateColumns="False" Margin="58,168,62,22" Grid.ColumnSpan="3">
+        <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="58,168,55,22" Grid.ColumnSpan="3">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="FontFamily" Value="Comic Sans MS"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,2"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
-
-                <DataGridTextColumn Header="Date of Import" Width="100"/>
-                <!--Binding="{Binding Name}"-->
-                <DataGridTextColumn Header="Date of Transaction" Width="120"/>
-                <!--Binding="{Binding Name}"-->
-                <DataGridTextColumn Header="Description" Width="150"/>
-                <!--Binding="{Binding Name}"-->
-                <DataGridTextColumn Header="Category" Width="120"/>
-                <!--Binding="{Binding Name}"-->
-                <DataGridTextColumn Header="Amount(HUF)" Width="100"/>
-                <!--Binding="{Binding Name}"-->
+                <DataGridTextColumn Header=" Date of Import" Width="100" Binding="{Binding writeDate}"/>
+                <DataGridTextColumn Header=" Date of Transaction" Width="130" Binding="{Binding transactionDate}"/>
+                <DataGridTextColumn Header=" Description" Width="150"/>
+                <DataGridTextColumn Header=" Category" Width="120"/>
+                <DataGridTextColumn Header=" Amount(HUF)" Width="110" Binding="{Binding transactionPrice}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

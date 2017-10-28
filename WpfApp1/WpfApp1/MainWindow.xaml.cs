@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -9,7 +10,9 @@ namespace WpfApp1
     public partial class MainWindow : INotifyPropertyChanged
     {
         private ButtonCommands btnCommand;
-
+        private List<Transaction> tableAttributes=null;
+        Boolean newImport = false;
+        private string accountNumber="";
         public MainWindow()
         {
             DataContext = this;
@@ -29,6 +32,28 @@ namespace WpfApp1
             }
         }
 
+        public void setTableAttribues(List<Transaction> impoertedTransactions,String accountNumber)
+        {
+            this.tableAttributes = impoertedTransactions;
+            this.accountNumber = accountNumber;
+        }
+        public void setTableAttribues(List<Transaction> impoertedTransactions,Boolean newImport)
+        {
+            this.tableAttributes = impoertedTransactions;
+            newImport = true;
+        }
+        public Boolean getNewImport()
+        {
+            return newImport;
+        }
+        public String getAccounNumber()
+        {
+            return accountNumber;
+        }
+        public List<Transaction> getTableAttributes()
+        {
+            return tableAttributes;
+        }
         public ButtonCommands ImportPushed
         {
             get
@@ -47,6 +72,14 @@ namespace WpfApp1
             {
                 btnCommand = new ButtonCommands(FileBrowser.Content.ToString(), this);
 
+                return btnCommand;
+            }
+        }
+        public ButtonCommands TablePushed
+        {
+            get
+            {
+                btnCommand = new ButtonCommands(TableButton.Content.ToString(), this);
                 return btnCommand;
             }
         }
@@ -72,12 +105,7 @@ namespace WpfApp1
         }
         public void getTransactions(string bankName,string folderAddress)
         {
-            new ImportReadIn(bankName, folderAddress);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Content = new TransactionMain();
+            new ImportReadIn(bankName, folderAddress,this);
         }
     }
     public class ButtonCommands : ICommand
@@ -125,6 +153,10 @@ namespace WpfApp1
                 }
                 mainWindow.getTransactions(mainWindow.banksComboBox.Text, mainWindow.FolderAddressLabel.Content.ToString());
                 mainWindow.LatestImportDate_Label.Visibility = System.Windows.Visibility.Visible;
+            }
+           else if(buttonContent.Equals("Table"))
+            {
+                mainWindow.Content = new TransactionMain(mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
             }
         }
     }
