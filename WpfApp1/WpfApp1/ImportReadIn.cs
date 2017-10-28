@@ -11,15 +11,18 @@ namespace WpfApp1
     {
         private string path = "";
         private string bankName = "";
+        private MainWindow mainWindow;
         List<Transaction> transactions;
 
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
-        public ImportReadIn(string bankName, string path)
+        public ImportReadIn(string bankName, string path,MainWindow mainWindow)
         {
             this.path = path;
             this.bankName = bankName;
+            this.mainWindow = mainWindow;
+
             if (path != "FolderAdress")//a path wasn't choosen
             {
                 ReadWorkbook = excel.Workbooks.Open(path);
@@ -50,7 +53,7 @@ namespace WpfApp1
         }
         public void writeOutTransactions()
         {
-            new ExportTransactions(transactions);
+            new ExportTransactions(transactions,mainWindow);
         }
     }
 }
