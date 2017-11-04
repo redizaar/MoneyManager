@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace WpfApp1
 {
-    class Transaction
+    public class Transaction
     {
-        private int balance_rn;
+        private int balance_rn ;
         private int balance_past;
-        private string transactionDate;
-        private int transactionPrice;
+        public string transactionDate { get; set; }
+        public int transactionPrice { get; set; }
         private string accountNumber;
+        public string writeDate { get; set; }
 
-        private string writeDate;
+
         public Transaction(int balance_rn,string date,int price,int balance_past,string accountNumber)
         {
             this.balance_rn = balance_rn;
@@ -30,6 +31,14 @@ namespace WpfApp1
             this.balance_rn = balance;
             this.transactionPrice = price;
             this.accountNumber = accountNumber;
+        }
+        public void setWriteDate(String todaysDate)
+        {
+            this.writeDate = todaysDate;
+        }
+        public string getWriteDate()
+        {
+            return writeDate;
         }
         public string getAccountNumber()
         {

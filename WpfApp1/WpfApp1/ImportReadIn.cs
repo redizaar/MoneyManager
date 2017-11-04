@@ -11,15 +11,18 @@ namespace WpfApp1
     {
         private string path = "";
         private string bankName = "";
+        private MainWindow mainWindow;
         List<Transaction> transactions;
 
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
-        public ImportReadIn(string bankName, string path)
+        public ImportReadIn(string bankName, string path,MainWindow mainWindow)
         {
             this.path = path;
             this.bankName = bankName;
+            this.mainWindow = mainWindow;
+
             if (path != "FolderAdress")//a path wasn't choosen
             {
                 ReadWorkbook = excel.Workbooks.Open(path);
@@ -36,6 +39,14 @@ namespace WpfApp1
                 {
                     new ReadInKandH(this, ReadWorkbook, ReadWorksheet);
                 }
+                else if (bankName.Equals("All"))
+                {
+                    TemplateReadIn TemplateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet);
+                    //so far we got the Starting Row(of the transactions),Number of Columns
+                    //TemplateBank.getTransactionDate(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
+                    //we got the transaction date + the account number
+                    TemplateBank.getTransactionPrices(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
+                }
             }
         }
         ~ImportReadIn()
@@ -50,7 +61,7 @@ namespace WpfApp1
         }
         public void writeOutTransactions()
         {
-            new ExportTransactions(transactions);
+            new ExportTransactions(transactions,mainWindow);
         }
     }
 }

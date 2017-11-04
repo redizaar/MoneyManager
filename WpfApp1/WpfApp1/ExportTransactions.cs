@@ -13,10 +13,13 @@ namespace WpfApp1
         Workbook WriteWorkbook;
         Worksheet WriteWorksheet;
         _Application excel = new _Excel.Application();
-        public ExportTransactions(List<Transaction> transactions)
+        private MainWindow mainWindow;
+
+        public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow)
         {
-            //check if the transaction is already exported or not
-            List<Transaction> neededTransactions=newTransactions(transactions);
+            this.mainWindow = mainWindow;
+                                                    //BUT FIRST - check if the transaction is already exported or not 
+            List<Transaction> neededTransactions = newTransactions(transactions);
 
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
@@ -64,13 +67,12 @@ namespace WpfApp1
                 return;
             }
         }
-        //check if the transaction is already exported or not
-        private List<Transaction> newTransactions(List<Transaction> importedTransactions)
+        private List<Transaction> newTransactions(List<Transaction> importedTransactions) //check if the transaction is already exported or not
         {
             List<Transaction> savedTransactions = SavedTransactions.getSavedTransactions();
             List<Transaction> neededTransactions=new List<Transaction>();
             string accountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
-            if (savedTransactions.Count != 0)//if the export file is empty we don't scan it
+            if (savedTransactions.Count != 0)//if the export file is not empty we scan it
             {
                 List<Transaction> tempTransactions = new List<Transaction>();
                 foreach (var saved in savedTransactions)
@@ -82,7 +84,7 @@ namespace WpfApp1
                         tempTransactions.Add(saved);
                     }
                 }
-                if (tempTransactions.Count != 0)//ha nincs olyan már elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
+                if (tempTransactions.Count != 0)//ha van olyan már elmentett tranzakció aminek az  a bankszámlaszáma mint amit importálni akarunk
                 {
                     foreach (var imported in importedTransactions)
                     {
@@ -97,18 +99,44 @@ namespace WpfApp1
                                 break;
                             }
                         }
-                        if(redundant==false)
+                        if (redundant == false)
                         {
-                            Console.WriteLine("nem egyezett");
                             neededTransactions.Add(imported);
                         }
                     }
+                    if(neededTransactions.Count==0)
+                    {
+                        mainWindow.setTableAttribues(savedTransactions, accountNumber);
+                        //only pass the saved transactions because we didn't add new
+                        //and the accountNumber so we can select it by user
+                    }
+                    else
+                    {
+                        //we pass both the saved and the new transcations
+                        List<Transaction> savedAndImported=new List<Transaction>();
+
+                        //tempTrancations containts saved Transactions where the accountnumber matches with the imported Transactions
+                        foreach (var attribue in tempTransactions)
+                        {
+                            savedAndImported.Add(attribue);
+                        }
+                        foreach (var attribue in neededTransactions)
+                        {
+                            savedAndImported.Add(attribue);
+                        }
+                        mainWindow.setTableAttribues(savedAndImported,true);
+                    }
                     return neededTransactions;
                 }
-                return importedTransactions;
+                else //nincs olyan elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
+                {
+                    mainWindow.setTableAttribues(importedTransactions,"empty");
+                    return importedTransactions;
+                }
             }
-            else
+            else // még nincs elmentett tranzakció
             {
+                mainWindow.setTableAttribues(importedTransactions,"empty");
                 return importedTransactions;
             }
         }
