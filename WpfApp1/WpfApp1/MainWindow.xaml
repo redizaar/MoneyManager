@@ -13,18 +13,19 @@
             <ColumnDefinition Width="83*"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Grid.Column="2" Command="{Binding Path=ImportPushed}"/>
-        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="60,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
+        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="78,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
         <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="24,174,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Grid.Column="1">
-            <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="151"/>
-            <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="151"/>
-            <ComboBoxItem Content="K&amp;H"/>
+            <ComboBoxItem Content="All" HorizontalAlignment="Left" Width="214"/>
+            <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
+            <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
+            <ComboBoxItem Content="K&amp;H" HorizontalAlignment="Left" Width="213"/>
         </ComboBox>
         <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Grid.Column="1" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" Command="{Binding Path=OpenFilePushed}"/>
         <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="60,274,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Button Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#FFFFFF66" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Click="Button_Click"/>
+        <Button x:Name="TableButton" Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#F888FF66" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Command="{Binding Path=TablePushed}"/>
         <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="123,174,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33" Grid.ColumnSpan="2"/>
         <Button Content="Transactions" HorizontalAlignment="Left" Margin="58,91,0,0" VerticalAlignment="Top" Width="123" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14"/>
-        <Button Content="Exit" HorizontalAlignment="Left" Margin="197,91,0,0" VerticalAlignment="Top" Width="123" Background="#FFFFFF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Grid.ColumnSpan="2"/>
+        <Button Content="Exit" HorizontalAlignment="Left" Margin="197,91,0,0" VerticalAlignment="Top" Width="123" Background="#F888FF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Grid.ColumnSpan="2"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="10,43,0,0" VerticalAlignment="Top" Width="692" Grid.ColumnSpan="3">
             <Label Content="Money Manager" Margin="266,1,222,-1" FontFamily="Bookman Old Style" FontSize="22" BorderBrush="Gray" Foreground="Gray"/>
         </Border>

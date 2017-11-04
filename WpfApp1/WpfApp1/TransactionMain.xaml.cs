@@ -15,14 +15,64 @@ using System.Windows.Shapes;
 
 namespace WpfApp1
 {
-    /// <summary>
-    /// Interaction logic for TransactionMain.xaml
-    /// </summary>
     public partial class TransactionMain : Page
     {
-        public TransactionMain()
+        private List<Transaction> tableAttribues;
+        private List<TransactionCategory> categories;
+        public List<string> categoryName { get; set; }
+        public TransactionMain(List<Transaction> tableAttribues, String accountNumber)
         {
+            this.DataContext = this;
+
             InitializeComponent();
+            if (this.tableAttribues != tableAttribues && tableAttribues != null)
+            {
+                this.tableAttribues = tableAttribues;
+                if (accountNumber.Equals(""))
+                {
+                    addAtribuesToTable(); //we have imported and saved files in this case
+                                        //the accountNumber is already matching
+                }
+                else
+                {
+                    addAtribuesToTable(accountNumber);
+                }
+            }
+        }
+        private void addAtribuesToTable(String accountNumber)
+        {
+            if (accountNumber.Equals("empty"))//only imported files
+            {
+                foreach (var attribute in tableAttribues)
+                {
+                    if (attribute.getWriteDate().Equals(null))
+                    {
+                        attribute.setWriteDate(DateTime.Now.ToString("M/d/yyyy"));
+                    }
+                    TransactionTableXAML.Items.Add(attribute);
+                }
+            }
+            else
+            {
+                foreach (var attribute in tableAttribues)
+                {
+                    if (attribute.getAccountNumber().Equals(accountNumber))//only saved files
+                    {
+                        TransactionTableXAML.Items.Add(attribute);
+                    }
+                }
+            }
+        }
+        private void addAtribuesToTable()
+        {
+            foreach (var attribute in tableAttribues)
+            {
+                if (attribute.getWriteDate().Equals(null))
+                {
+                    attribute.setWriteDate(DateTime.Now.ToString("M/d/yyyy"));
+                }
+                TransactionTableXAML.Items.Add(attribute);
+            }
         }
     }
 }

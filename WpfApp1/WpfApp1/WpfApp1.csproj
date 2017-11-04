@@ -59,7 +59,9 @@
     <Compile Include="ReadInKandH.cs" />
     <Compile Include="ReadInOTP.cs" />
     <Compile Include="SavedTransactions.cs" />
+    <Compile Include="TemplateReadIn.cs" />
     <Compile Include="Transaction.cs" />
+    <Compile Include="TransactionCategory.cs" />
     <Compile Include="TransactionMain.xaml.cs">
       <DependentUpon>TransactionMain.xaml</DependentUpon>
     </Compile>
