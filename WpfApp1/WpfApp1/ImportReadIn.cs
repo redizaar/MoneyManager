@@ -44,8 +44,8 @@ namespace WpfApp1
                     TemplateReadIn TemplateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet);
                     //so far we got the Starting Row(of the transactions),Number of Columns
                     //TemplateBank.getTransactionDate(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
-                    //we got the transaction date + the account number
-                    TemplateBank.getTransactionPrices(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
+                    //TemplateBank.getTransactionPrices(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
+                    TemplateBank.readOutTransactionColumns(TemplateBank.getStartingRow(), TemplateBank.getNumberOfColumns());
                 }
             }
         }
