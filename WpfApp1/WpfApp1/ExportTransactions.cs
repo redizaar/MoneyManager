@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using _Excel = Microsoft.Office.Interop.Excel;
+using System.Windows;
 
 namespace WpfApp1
 {
@@ -57,9 +58,16 @@ namespace WpfApp1
                     line.Insert();
                     Console.WriteLine(row_number + " sor beszurva");
                 }
-                WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                                    false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
-                                     Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                try
+                {
+                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                                        false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
+                                         Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                }
+                catch(Exception e)
+                {
+
+                }
                 WriteWorkbook.Close();
             }
             else
@@ -101,7 +109,7 @@ namespace WpfApp1
                         }
                         if (redundant == false)
                         {
-                            neededTransactions.Add(imported);
+                            neededTransactions.Add(imported);;
                         }
                     }
                     if(neededTransactions.Count==0)
@@ -125,6 +133,12 @@ namespace WpfApp1
                             savedAndImported.Add(attribue);
                         }
                         mainWindow.setTableAttribues(savedAndImported,true);
+                    }
+                    if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transactions!\n" +
+                        "("+tempTransactions.Count+" of "+tempTransactions.Count+" already imported)", "OK",
+                         MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
+                    {
+                        return neededTransactions;
                     }
                     return neededTransactions;
                 }
