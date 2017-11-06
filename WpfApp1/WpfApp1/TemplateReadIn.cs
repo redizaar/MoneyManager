@@ -20,6 +20,7 @@ namespace WpfApp1
         private bool isFirstTransaction;//in case of missing Balance column..
         private string accountNumber;
         private bool multipleColumn;
+        private bool calculatedBalance;//in case of having a balance column , but it is null in some of the rows..........
 
         public TemplateReadIn(ImportReadIn importReadin, Workbook workbook, Worksheet worksheet)
         {
@@ -29,14 +30,15 @@ namespace WpfApp1
             this.TransactionSheet = worksheet;
             this.multipleColumn = false;
             this.isFirstTransaction = false;
-
+            this.calculatedBalance = false;
             getTransactionRows();
         }
         private void getTransactionRows()
         {
             this.accountNumber = "";
             Regex accoutNumberRegex1 = new Regex(@"^Számlaszám$");
-            Regex accountNumberRegex2 = new Regex(@"^Könyvelési számla$"); 
+            Regex accountNumberRegex2 = new Regex(@"^Könyvelési számla$");
+            Regex accoutNumberRegex3 = new Regex(@"^Számlaszám:$");
             int blank_row=0;
             int blank_cells = 0;
             int i = 1;
@@ -53,7 +55,7 @@ namespace WpfApp1
                         if (column == 1)
                         {
                             string cellValue = TransactionSheet.Cells[i, column].Value.ToString();
-                            if (accoutNumberRegex1.IsMatch(cellValue))
+                            if (accoutNumberRegex1.IsMatch(cellValue) || accountNumberRegex2.IsMatch(cellValue) || accoutNumberRegex3.IsMatch(cellValue))
                             {
                                 string accountNumberValue = TransactionSheet.Cells[i, column + 1].Value.ToString();//the cell next to it
                                 setAccountNumber(accountNumberValue);
@@ -91,7 +93,7 @@ namespace WpfApp1
                             if(TransactionSheet.Cells[i, j].Value!=null)
                             {
                                 string cellValue = TransactionSheet.Cells[i, j].Value.ToString();
-                                if(accoutNumberRegex1.IsMatch(cellValue) || accountNumberRegex2.IsMatch(cellValue))
+                                if(accoutNumberRegex1.IsMatch(cellValue) || accountNumberRegex2.IsMatch(cellValue) || accoutNumberRegex3.IsMatch(cellValue))
                                 {
                                     string accountNumberValue = TransactionSheet.Cells[i+1, j].Value.ToString();//the cell below it
                                     setAccountNumber(accountNumberValue);
@@ -160,11 +162,11 @@ namespace WpfApp1
                     row++;
                 }
             }
-            if(singlepriceColumn!=-1)//single column
+            if (singlepriceColumn != -1)//single column
             {
                 int blank_counter = 0;
-                List<Transaction> transaction=new List<Transaction>();
-                while(blank_counter<2)
+                List<Transaction> transaction = new List<Transaction>();
+                while (blank_counter < 2)
                 {
                     if (balaceColumn != -1)//have balance column
                     {
@@ -222,7 +224,7 @@ namespace WpfApp1
                             else
                             {
                                 transaction.Add(new Transaction(this.getPastTransactionPrice() + transactionPrice, transactionDate, transactionPrice, this.getPastTransactionPrice(), accountNumber));
-                                this.setPastTransactionPrice(this.getPastTransactionPrice()+transactionPrice);
+                                this.setPastTransactionPrice(this.getPastTransactionPrice() + transactionPrice);
                             }
                         }
                         else
@@ -232,15 +234,227 @@ namespace WpfApp1
                     }
                     row++;
                 }
-                foreach(var valami in transaction)
+                foreach (var valami in transaction)
                 {
-                    Console.WriteLine("datum: "+valami.getTransactionDate() + " szamlaszam: " + valami.getAccountNumber() + " osszeg: " + valami.getTransactionPrice() + " egyenleg: " + valami.getBalance_rn());
+                    Console.WriteLine("datum: " + valami.getTransactionDate() + " szamlaszam: " + valami.getAccountNumber() + " osszeg: " + valami.getTransactionPrice() + " egyenleg: " + valami.getBalance_rn());
                 }
             }
             else//multiple price columns
             {
+                Regex priceRegex1 = new Regex(@"Terhelés$");
+                Regex priceRegex2 = new Regex(@"Jóváírás$");
+                int costPriceColumn = 0;
+                int incomePriceColumn = 0;
+                for (int i = row - 1; i < row + 1; i++)//a row!=1 azt már lekezeltük
+                {
+                    for (int j = 1; j < maxColumn; j++)
+                    {
+                        if (TransactionSheet.Cells[i, j].Value != null)
+                        {
+                            string cellValue = TransactionSheet.Cells[i, j].Value.ToString();
+                            if (priceRegex1.IsMatch(cellValue))
+                            {
+                                costPriceColumn = j;
+                            }
+                            if (priceRegex2.IsMatch(cellValue))
+                            {
+                                incomePriceColumn = j;
+                            }
+                        }
+                    }
+                }
+                if ((costPriceColumn != 0) && (incomePriceColumn != 0))
+                {
+                    int blank_counter = 0;
+                    List<Transaction> transaction = new List<Transaction>();
+                    while (blank_counter < 2)
+                    {
+                        if (balaceColumn != -1)//have balance column
+                        {
+                            if ((TransactionSheet.Cells[row, dateColumn].Value != null) &&
+                                TransactionSheet.Cells[row, costPriceColumn].Value != null ||
+                                TransactionSheet.Cells[row, incomePriceColumn].Value != null)
+                            {
+                                blank_counter = 0;
 
+                                string transactionDate = TransactionSheet.Cells[row, dateColumn].Value.ToString();
+                                string accountNumber = getAccountNumber();
+
+                                string incomePriceString = "";
+                                string costPriceString = "";
+                                int tempRow = 0;
+                                int incomePrice = 0;
+                                int costPrice = 0;
+                                if (TransactionSheet.Cells[row, incomePriceColumn].Value != null)
+                                {
+                                    incomePriceString = TransactionSheet.Cells[row, incomePriceColumn].Value.ToString();
+                                    incomePrice = int.Parse(incomePriceString);
+                                }
+                                else if (TransactionSheet.Cells[row, costPriceColumn].Value != null)
+                                {
+                                    costPriceString = TransactionSheet.Cells[row, costPriceColumn].Value.ToString();
+                                    costPrice = int.Parse(costPriceString);
+                                }
+                                string transactionBalanceString = "";
+                                int transactionBalance = 0;
+                                int calcuatedBalance = 0;
+                                if (TransactionSheet.Cells[row, balaceColumn].Value != null)
+                                {
+                                    setCalculatedBalance(false);
+                                    transactionBalanceString = TransactionSheet.Cells[row, balaceColumn].Value.ToString();
+                                    transactionBalance = int.Parse(transactionBalanceString);
+                                }
+                                else
+                                {
+
+                                    setCalculatedBalance(true);
+                                    tempRow = row;
+                                    while (TransactionSheet.Cells[tempRow, balaceColumn].Value == null)
+                                    {
+                                        tempRow++;
+                                    }
+                                    transactionBalanceString = TransactionSheet.Cells[tempRow, balaceColumn].Value.ToString();
+                                    transactionBalance = int.Parse(transactionBalanceString);
+                                    calcuatedBalance = calculatePastBalance(transactionBalance, row, tempRow, costPriceColumn, incomePriceColumn);
+                                }
+                                if (getCalculatedBalance())
+                                {
+                                    if (incomePrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, incomePrice, calcuatedBalance + incomePrice, accountNumber));
+                                    }
+                                    else if (costPrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, costPrice, calcuatedBalance + costPrice, accountNumber));
+                                    }
+                                }
+                                else
+                                {
+                                    if (incomePrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(transactionBalance, transactionDate, incomePrice, transactionBalance + incomePrice, accountNumber));
+                                    }
+                                    else if (costPrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(transactionBalance, transactionDate, costPrice, transactionBalance + costPrice, accountNumber));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                blank_counter++;
+                            }
+                        }
+                        else//don't have balance column
+                        {
+                            if ((TransactionSheet.Cells[row, dateColumn].Value != null) &&
+                                TransactionSheet.Cells[row, costPriceColumn].Value != null ||
+                                TransactionSheet.Cells[row, incomePriceColumn].Value != null)
+                            {
+                                blank_counter = 0;
+
+                                string transactionDate = TransactionSheet.Cells[row, dateColumn].Value.ToString();
+                                string accountNumber = getAccountNumber();
+
+                                string incomePriceString = "";
+                                string costPriceString = "";
+                                if (TransactionSheet.Cells[row, incomePriceColumn].Value != null)
+                                {
+                                    incomePriceString = TransactionSheet.Cells[row, incomePriceColumn].Value.ToString();
+                                }
+                                else if (TransactionSheet.Cells[row, costPriceColumn].Value != null)
+                                {
+                                    costPriceString = TransactionSheet.Cells[row, costPriceColumn].Value.ToString();
+
+                                }
+
+                                int incomePrice = 0;
+                                int costPrice = 0;
+                                try
+                                {
+                                    incomePrice = int.Parse(incomePriceString);
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+                                try
+                                {
+                                    costPrice = int.Parse(costPriceString) * (-1);
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+                                if (this.getIsFirstTransaction())//we pretend that the balance is 0
+                                {
+                                    if (incomePrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(incomePrice, transactionDate, incomePrice, 0, accountNumber));
+                                        this.setPastTransactionPrice(incomePrice);
+                                        this.setIsFirstTransaction(false);
+                                    }
+                                    else if (costPrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(costPrice, transactionDate, costPrice, 0, accountNumber));
+                                        this.setPastTransactionPrice(costPrice);
+                                        this.setIsFirstTransaction(false);
+                                    }
+                                }
+                                else
+                                {
+                                    if (incomePrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + incomePrice, transactionDate, incomePrice, this.getPastTransactionPrice(), accountNumber));
+                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + incomePrice);
+                                    }
+                                    else if (costPrice != 0)
+                                    {
+                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + costPrice, transactionDate, costPrice, this.getPastTransactionPrice(), accountNumber));
+                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + costPrice);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                blank_counter++;
+                            }
+                        }
+                        row++;
+                    }
+                    foreach (var valami in transaction)
+                    {
+                        Console.WriteLine("datum: " + valami.getTransactionDate() + " szamlaszam: " + valami.getAccountNumber() + " osszeg: " + valami.getTransactionPrice() + " egyenleg: " + valami.getBalance_rn());
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Couldn't locate the price columns");
+                }
             }
+        }
+
+        private int calculatePastBalance(int transactionBalance,int row,int tempRow,int costPriceColumn,int incomePriceColumn)
+        {
+            tempRow--;//we are currently at a cell where we have a balance value
+            //so we go up
+            while (tempRow!=row-1)
+            {
+                if(TransactionSheet.Cells[tempRow, costPriceColumn].Value!=null)
+                {
+                    string costPriceString = TransactionSheet.Cells[tempRow, costPriceColumn].Value.ToString();
+                    int costPrice = int.Parse(costPriceString)*(-1);
+                    transactionBalance += costPrice ;
+                }
+                else if(TransactionSheet.Cells[tempRow, incomePriceColumn].Value!=null)
+                {
+                    string incomePriceString = TransactionSheet.Cells[tempRow, incomePriceColumn].Value.ToString();
+                    int incomePrice = int.Parse(incomePriceString);
+                    transactionBalance += incomePrice;
+                }
+                tempRow--;
+            }
+            return transactionBalance;
         }
 
         private int getAccountBalanceColumn(int row, int maxColumn)
@@ -392,6 +606,10 @@ namespace WpfApp1
         {
             isFirstTransaction = value;
         }
+        public void setCalculatedBalance(bool value)
+        {
+            calculatedBalance = value;
+        }
 
         public int getStartingRow()
         {
@@ -412,6 +630,10 @@ namespace WpfApp1
         public bool getIsFirstTransaction()
         {
             return isFirstTransaction;
+        }
+        public bool getCalculatedBalance()
+        {
+            return calculatedBalance;
         }
     }
 }
