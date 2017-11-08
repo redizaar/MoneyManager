@@ -234,10 +234,7 @@ namespace WpfApp1
                     }
                     row++;
                 }
-                foreach (var valami in transaction)
-                {
-                    Console.WriteLine("datum: " + valami.getTransactionDate() + " szamlaszam: " + valami.getAccountNumber() + " osszeg: " + valami.getTransactionPrice() + " egyenleg: " + valami.getBalance_rn());
-                }
+                bankHanlder.addTransactions(transaction);
             }
             else//multiple price columns
             {
@@ -422,10 +419,7 @@ namespace WpfApp1
                         }
                         row++;
                     }
-                    foreach (var valami in transaction)
-                    {
-                        Console.WriteLine("datum: " + valami.getTransactionDate() + " szamlaszam: " + valami.getAccountNumber() + " osszeg: " + valami.getTransactionPrice() + " egyenleg: " + valami.getBalance_rn());
-                    }
+                    bankHanlder.addTransactions(transaction);
                 }
                 else
                 {

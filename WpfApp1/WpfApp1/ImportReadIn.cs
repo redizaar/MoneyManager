@@ -42,9 +42,7 @@ namespace WpfApp1
                 else if (bankName.Equals("All"))
                 {
                     TemplateReadIn TemplateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet);
-                    //so far we got the Starting Row(of the transactions),Number of Columns
-                    //TemplateBank.getTransactionDate(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
-                    //TemplateBank.getTransactionPrices(TemplateBank.getStartingRow(),TemplateBank.getNumberOfColumns());
+                    //so far we got the Starting Row(of the transactions),Number of Columns, account number
                     TemplateBank.readOutTransactionColumns(TemplateBank.getStartingRow(), TemplateBank.getNumberOfColumns());
                 }
             }
