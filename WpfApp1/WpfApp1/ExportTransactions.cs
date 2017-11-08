@@ -42,21 +42,20 @@ namespace WpfApp1
                     if (transctn.getTransactionPrice() < 0)
                     {
                         WriteWorksheet.Cells[row_number, 9].Value = transctn.getTransactionPrice();
-                        WriteWorksheet.Cells[row_number, 11].Value = transctn.getBalance_rn() - transctn.getTransactionPrice();
+                        WriteWorksheet.Cells[row_number, 11].Value = transctn.getTransactionPrice();
                         WriteWorksheet.Cells[row_number, 15].Value = "havi";
                     }
                     else
                     {
                         WriteWorksheet.Cells[row_number, 8].Value = transctn.getTransactionPrice();
                         WriteWorksheet.Cells[row_number, 10].Value = transctn.getTransactionPrice();
-                        WriteWorksheet.Cells[row_number, 11].Value = transctn.getBalance_rn() - transctn.getTransactionPrice();
+                        WriteWorksheet.Cells[row_number, 11].Value = transctn.getTransactionPrice();
                         WriteWorksheet.Cells[row_number, 15].Value = "havi";
                     }
                     WriteWorksheet.Cells[row_number, 14].Value = transctn.getAccountNumber();
                     row_number++;
                     Range line = (Range)WriteWorksheet.Rows[row_number];
                     line.Insert();
-                    Console.WriteLine(row_number + " sor beszurva");
                 }
                 try
                 {
@@ -134,8 +133,8 @@ namespace WpfApp1
                         }
                         mainWindow.setTableAttribues(savedAndImported,true);
                     }
-                    if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transactions!\n" +
-                        "("+tempTransactions.Count+" of "+tempTransactions.Count+" already imported)", "OK",
+                    if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transaction(s)!\n" +
+                        "("+tempTransactions.Count+" was already imported)", "OK",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                     {
                         return neededTransactions;
@@ -145,12 +144,22 @@ namespace WpfApp1
                 else //nincs olyan elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
                 {
                     mainWindow.setTableAttribues(importedTransactions,"empty");
+                    if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "OK",
+                         MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
+                    {
+                        return importedTransactions;
+                    }
                     return importedTransactions;
                 }
             }
             else // még nincs elmentett tranzakció
             {
                 mainWindow.setTableAttribues(importedTransactions,"empty");
+                if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "OK",
+                         MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
+                {
+                    return importedTransactions;
+                }
                 return importedTransactions;
             }
         }

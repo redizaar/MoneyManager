@@ -40,44 +40,35 @@ namespace WpfApp1
                         osszegString = worksheet.Cells[i, 11].Value.ToString();
                         osszeg = int.Parse(osszegString)*(-1);
                     }
-                    if (i == 20)
+                    if (worksheet.Cells[i, 13].Value == null)//in case if the Egyenleg cell is null in the first transaction (interesting FHB file)
                     {
-                        if (worksheet.Cells[i, 13].Value == null)//in case if the Egyenleg cell is null in the first transaction (interesting FHB file)
+                        int tempIndex = i + 1; //don't scan the current cell because we already know it's null
+                        while (worksheet.Cells[tempIndex, 13].Value == null)
                         {
-                            int tempIndex = i + 1; //don't scan the current cell because we already know it's null
-                            while (worksheet.Cells[tempIndex, 13].Value == null)
-                            {
-                                tempIndex++;
-                            }
-                            string oldEgyenlegString = "";
-                            oldEgyenlegString = worksheet.Cells[tempIndex, 13].Value.ToString();
-                            int oldEgyenlegInt = int.Parse(oldEgyenlegString);
-                            Console.WriteLine(oldEgyenlegInt);
-                            //adding or substracting other transactions -- to get the real Egyenleg
-                            while (tempIndex != i)
-                            {
-                                string tempOsszegString = "";
-                                int tempOsszegInt = 0;
-                                if (worksheet.Cells[tempIndex, 9].Value != null)//cost
-                                {
-                                    tempOsszegString = worksheet.Cells[tempIndex, 9].Value.ToString();
-                                    tempOsszegInt = int.Parse(tempOsszegString) * (-1);
-                                }
-                                else if (worksheet.Cells[tempIndex, 11].Value != null)//income
-                                {
-                                    tempOsszegString = worksheet.Cells[tempIndex, 11].Value.ToString();
-                                    tempOsszegInt = int.Parse(tempOsszegString);
-                                }
-                                oldEgyenlegInt += tempOsszegInt;
-                                tempIndex--;//going back up
-                            }
-                            currentEgyenleg = oldEgyenlegInt;
+                            tempIndex++;
                         }
-                        else
+                        string oldEgyenlegString = "";
+                        oldEgyenlegString = worksheet.Cells[tempIndex, 13].Value.ToString();
+                        int oldEgyenlegInt = int.Parse(oldEgyenlegString);
+                        //adding or substracting other transactions -- to get the real Egyenleg
+                        while (tempIndex != i - 1)
                         {
-                            egyenlegString = worksheet.Cells[i, 13].Value.ToString();
-                            currentEgyenleg = int.Parse(egyenlegString);
+                            string tempOsszegString = "";
+                            int tempOsszegInt = 0;
+                            if (worksheet.Cells[tempIndex, 9].Value != null)//cost
+                            {
+                                tempOsszegString = worksheet.Cells[tempIndex, 9].Value.ToString();
+                                tempOsszegInt = int.Parse(tempOsszegString);
+                            }
+                            else if (worksheet.Cells[tempIndex, 11].Value != null)//income
+                            {
+                                tempOsszegString = worksheet.Cells[tempIndex, 11].Value.ToString();
+                                tempOsszegInt = int.Parse(tempOsszegString) * (-1);
+                            }
+                            oldEgyenlegInt += tempOsszegInt;
+                            tempIndex--;//going back up
                         }
+                        currentEgyenleg = oldEgyenlegInt;
                     }
                     else
                     {
@@ -103,6 +94,7 @@ namespace WpfApp1
                             }
                         }
                     }
+                    Console.WriteLine(currentEgyenleg);
                     transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, currentEgyenleg += osszeg,accountNumber));
                 }
                 i++;
