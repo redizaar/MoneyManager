@@ -5,30 +5,107 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Money Manager" Height="367.636" Width="720.907">
-    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="97*"/>
-            <ColumnDefinition Width="105*"/>
-            <ColumnDefinition Width="83*"/>
-        </Grid.ColumnDefinitions>
-        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Grid.Column="2" Command="{Binding Path=ImportPushed}"/>
-        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="78,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Grid.Column="1"/>
-        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="24,174,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Grid.Column="1">
+        Title="Money Manager" Height="367.636" Width="720">
+    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
+        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="425,221,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Height="27" Width="127"/>
+        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="396,154,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Height="22">
             <ComboBoxItem Content="All" HorizontalAlignment="Left" Width="214"/>
             <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
             <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
             <ComboBoxItem Content="K&amp;H" HorizontalAlignment="Left" Width="213"/>
         </ComboBox>
-        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="89,215,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" Grid.Column="1" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" Command="{Binding Path=OpenFilePushed}"/>
-        <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="60,274,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Button x:Name="TableButton" Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#F888FF66" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Command="{Binding Path=TablePushed}"/>
-        <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="123,174,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33" Grid.ColumnSpan="2"/>
-        <Button Content="Transactions" HorizontalAlignment="Left" Margin="58,91,0,0" VerticalAlignment="Top" Width="123" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14"/>
-        <Button Content="Exit" HorizontalAlignment="Left" Margin="197,91,0,0" VerticalAlignment="Top" Width="123" Background="#F888FF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Grid.ColumnSpan="2"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="10,43,0,0" VerticalAlignment="Top" Width="692" Grid.ColumnSpan="3">
-            <Label Content="Money Manager" Margin="266,1,222,-1" FontFamily="Bookman Old Style" FontSize="22" BorderBrush="Gray" Foreground="Gray"/>
+        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="449,194,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" Command="{Binding Path=OpenFilePushed}"/>
+        <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="355,253,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Height="26"/>
+        <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="266,154,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33"/>
+        <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Left" Margin="216,98,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" Height="28" BorderBrush="#FF918C8C" Command="{Binding Path=ExitPushed}" RenderTransformOrigin="1.506,0.714"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="711" Background="LightSalmon">
+            <Label Content="Account History Importer" Margin="9,1,292,-1" FontFamily="Bookman Old Style" FontSize="20" BorderBrush="Gray" Foreground="FloralWhite"/>
         </Border>
-        <Image Grid.Column="1" HorizontalAlignment="Left" Height="43" Margin="106,0,0,0" VerticalAlignment="Top" Width="68" Source="dollar_uj2.jpg"/>
+        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="216,43,0,0" VerticalAlignment="Top" Width="170" RenderTransformOrigin="1.43,-2.253" Height="28" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" Command="{Binding Path=ImportPushed}" BorderBrush="#FF918C8C"/>
+        <Button x:Name="TableButton" Content="Table" HorizontalAlignment="Left" Margin="216,70,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5" Height="28" FontFamily="Comic Sans MS" FontSize="14" Command="{Binding Path=TablePushed}" BorderBrush="#FF918C8C"/>
+        <Frame x:Name="MainFrame" Margin="150,38,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="1">
+        </Frame>
+        <DockPanel Margin="0,38,570,0">
+            <Border Margin="0,0,570,0">
+                <Canvas Margin="0,0,570,0">
+                    <StackPanel Background="#FF292728" Width="150" Margin="-90,0,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="-90,0,0,0" To="0,0,0,0" DecelerationRatio=".4" Duration="0:0:1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="-90,0,0,0" DecelerationRatio=".9" Duration="0:0:1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <DockPanel Margin="0,0,0,0">
+                            <Button Height="35" Width="150" x:Name="newImportButton" Content="newImportButton" Click="newImportButton_Click">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="importIcon2.png" Height="30" Canvas.Right="15"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="8" Text="Import" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                            <Label x:Name="importClickedLabel" Width="5" Height="35" Background="#FF292728" Canvas.Right="0" BorderThickness="0">
+                                            </Label>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,0">
+                            <Button Height="35" Width="150" x:Name="newTableButton">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="tableIcon6.png" Height="30" Canvas.Right="15"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="8" Text="Table" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                            <Label x:Name="tableClickedLabel" Width="5" Height="35" Background="#FF292728" Canvas.Right="0" BorderThickness="0">
+                                                <Label.Triggers>
+                                                    <EventTrigger RoutedEvent="MouseEnter">
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <ColorAnimation  To="#FF19AEB6" Storyboard.TargetProperty="(Label.Background).(SolidColorBrush.Color)" FillBehavior="Stop"/>
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,0">
+                            <Button Height="35" Width="150" x:Name="newExitIcon" Content="newExitIcon">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="exitIcon4.png" Height="30" Canvas.Right="15"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="8" Text="Exit" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                    </StackPanel>
+                </Canvas>
+            </Border>
+        </DockPanel>
+        <!--LightSalmon,LightSkyBlue-->
     </Grid>
 </Window>

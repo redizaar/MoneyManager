@@ -20,10 +20,33 @@ namespace WpfApp1
         private List<Transaction> tableAttribues;
         private List<TransactionCategory> categories;
         public List<string> categoryName { get; set; }
-        public TransactionMain(List<Transaction> tableAttribues, String accountNumber)
+        public MainWindow ImportMenu;
+        public TransactionMain(MainWindow mainWindow,List<Transaction> tableAttribues, String accountNumber)
         {
             this.DataContext = this;
-
+            this.ImportMenu = mainWindow;
+            if (TransactionTableXAML != null)
+            {
+                TransactionTableXAML.Items.Clear();
+            }
+            if (tableAttribues != null)
+            {
+                foreach (var transaction in tableAttribues)
+                {
+                    if (transaction.getWriteDate() != null)
+                    {
+                        transaction.setWriteDate(transaction.getWriteDate().Substring(0, 12));
+                    }
+                    else
+                    {
+                        transaction.setWriteDate(DateTime.Now.ToString("yyyy/MM/dd"));
+                    }
+                    if (transaction.getTransactionDate().Length > 12)
+                    {
+                        transaction.setTransactionDate(transaction.getTransactionDate().Substring(0, 12));
+                    }
+                }
+            }
             InitializeComponent();
             if (this.tableAttribues != tableAttribues && tableAttribues != null)
             {
@@ -31,7 +54,7 @@ namespace WpfApp1
                 if (accountNumber.Equals(""))
                 {
                     addAtribuesToTable(); //we have imported and saved files in this case
-                                        //the accountNumber is already matching
+                                         //the accountNumber is already matching
                 }
                 else
                 {
@@ -45,10 +68,6 @@ namespace WpfApp1
             {
                 foreach (var attribute in tableAttribues)
                 {
-                    if (attribute.getWriteDate().Equals(null))
-                    {
-                        attribute.setWriteDate(DateTime.Now.ToString("M/d/yyyy"));
-                    }
                     TransactionTableXAML.Items.Add(attribute);
                 }
             }
@@ -67,12 +86,13 @@ namespace WpfApp1
         {
             foreach (var attribute in tableAttribues)
             {
-                if (attribute.getWriteDate().Equals(null))
-                {
-                    attribute.setWriteDate(DateTime.Now.ToString("M/d/yyyy"));
-                }
                 TransactionTableXAML.Items.Add(attribute);
             }
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            Content = new ImportMainPage();
         }
     }
 }

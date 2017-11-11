@@ -36,6 +36,10 @@ namespace WpfApp1
         {
             this.writeDate = todaysDate;
         }
+        public void setTransactionDate(String value)
+        {
+            this.transactionDate = value;
+        }
         public string getWriteDate()
         {
             return writeDate;
