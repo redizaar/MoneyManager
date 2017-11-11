@@ -61,9 +61,8 @@ namespace WpfApp1
         {
             get
             {
-                btnCommand = new ButtonCommands(ImportButton.Content.ToString(),this);
-
-                return btnCommand;
+                    btnCommand = new ButtonCommands(ImportButton.Content.ToString(), this);
+                    return btnCommand;
             }
         }
         public ButtonCommands OpenFilePushed
@@ -115,12 +114,6 @@ namespace WpfApp1
         {
             new ImportReadIn(bankName, folderAddress,this);
         }
-
-        private void newImportButton_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine(newImportButton.Content);
-            Console.WriteLine(newImportButton.Name);
-        }
     }
     public class ButtonCommands : ICommand
     {
@@ -152,8 +145,9 @@ namespace WpfApp1
         {
            if(buttonContent.Equals("Import"))
             {
-                mainWindow.banksComboBox.Visibility = System.Windows.Visibility.Visible;
-                mainWindow.HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
+                //mainWindow.banksComboBox.Visibility = System.Windows.Visibility.Visible;
+                //mainWindow.HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
+                mainWindow.MainFrame.Content = new ImportMainPage();
             }
            else if(buttonContent.Equals("Open File"))
             {
