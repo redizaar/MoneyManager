@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("tableicon6.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("attachfile.png")]
 
 

@@ -5,36 +5,22 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1"
       mc:Ignorable="d" 
-      d:DesignHeight="367.636" d:DesignWidth="720.907"
+      d:DesignHeight="367.636" d:DesignWidth="750"
       Title="TransactionMain">
-    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="97*"/>
-            <ColumnDefinition Width="105*"/>
-            <ColumnDefinition Width="83*"/>
-        </Grid.ColumnDefinitions>
-        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="95,127,0,0" VerticalAlignment="Top" Width="103" RenderTransformOrigin="1.43,-2.253" Height="22" Background="#F888FF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12" Grid.Column="2" Click="ImportButton_Click"/>
-        <Button Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="241,127,0,0" VerticalAlignment="Top" Width="99" Background="#99FFFF" Height="22" Grid.ColumnSpan="2" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="12"/>
-        <Button Content="Transactions" HorizontalAlignment="Left" Margin="58,91,0,0" VerticalAlignment="Top" Width="123" Background="#FF99FFFF" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14"/>
-        <Button Content="Exit" HorizontalAlignment="Left" Margin="197,91,0,0" VerticalAlignment="Top" Width="123" Background="#F888FF66" FontWeight="Bold" FontFamily="Comic Sans MS" FontSize="14" Grid.ColumnSpan="2"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="10,43,0,0" VerticalAlignment="Top" Width="692" Grid.ColumnSpan="3">
-            <Label Content="Money Manager" Margin="266,1,222,-1" FontFamily="Bookman Old Style" FontSize="22" BorderBrush="Gray" Foreground="Gray"/>
-        </Border>
-        <Image Grid.Column="1" HorizontalAlignment="Left" Height="43" Margin="106,0,0,0" VerticalAlignment="Top" Width="68" Source="dollar_uj2.jpg"/>
-        <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="58,168,55,22" Grid.ColumnSpan="3">
+    <Grid Height="337" Width="750" VerticalAlignment="Top" Background="#F8D5D8D5">
+        <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="0,61,88,23" Grid.ColumnSpan="3">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background" Value="BurlyWood"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Background" Value="LightSalmon"/>
+                    <Setter Property="FontWeight" Value="Regular"/>
                     <Setter Property="FontFamily" Value="Comic Sans MS"/>
                     <Setter Property="BorderThickness" Value="0,0,1,2"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header=" Date of Import" Width="100" Binding="{Binding writeDate}"/>
                 <DataGridTextColumn Header=" Date of Transaction" Width="130" Binding="{Binding transactionDate}"/>
-                <DataGridTextColumn Header=" Description" Width="150"/>
+                <DataGridTextColumn Header=" Description" Width="180"/>
                 <DataGridComboBoxColumn Header=" Category"  x:Name="CategoryColumn" Width="120" ItemsSource="{Binding categoryName}" DisplayMemberPath="Category">
                     <DataGridComboBoxColumn.ElementStyle>
                         <Style TargetType="{x:Type ComboBox}">
@@ -47,8 +33,13 @@
                         </Style>
                     </DataGridComboBoxColumn.EditingElementStyle>
                 </DataGridComboBoxColumn>
-                <DataGridTextColumn Header=" Amount(HUF)" Width="110" Binding="{Binding transactionPrice}"/>
+                <DataGridTextColumn Header=" Amount(HUF)" Width="130" Binding="{Binding transactionPrice}"/>
+                <DataGridTextColumn Header=" Date of Import" Width="100" Binding="{Binding writeDate}"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Content="Month1" HorizontalAlignment="Left" Margin="169,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
+        <Button Content="Month2" HorizontalAlignment="Left" Margin="244,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White" RenderTransformOrigin="1.72,0.55"/>
+        <Button Content="Month3" HorizontalAlignment="Left" Margin="319,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
+        <Button Content="Month4" HorizontalAlignment="Left" Margin="394,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
     </Grid>
 </Page>

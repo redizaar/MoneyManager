@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Money Manager" Height="367.636" Width="720">
+        Title="Money Manager" Height="367.636" Width="880">
     <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
         <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="425,221,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Height="27" Width="127"/>
         <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="396,154,0,0" VerticalAlignment="Top" Width="216" SelectionChanged="ComboBox_SelectionChanged" RenderTransformOrigin="0.643,0.554" Height="22">
@@ -17,16 +17,16 @@
         <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="449,194,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS" Command="{Binding Path=OpenFilePushed}"/>
         <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="355,253,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Height="26"/>
         <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="266,154,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33"/>
-        <Button x:Name="ExitButton" Content="Exit" HorizontalAlignment="Left" Margin="216,98,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" Height="28" BorderBrush="#FF918C8C" Command="{Binding Path=ExitPushed}" RenderTransformOrigin="1.506,0.714"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="711" Background="LightSalmon">
-            <Label Content="Account History Importer" Margin="9,1,292,-1" FontFamily="Bookman Old Style" FontSize="20" BorderBrush="Gray" Foreground="FloralWhite"/>
+        <!--<Button x:Name="ExitButtonRegi" Content="Exit" HorizontalAlignment="Left" Margin="216,98,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" Height="28" BorderBrush="#FF918C8C" RenderTransformOrigin="1.506,0.714"/>-->
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="890" Background="LightSalmon">
+            <Label Content="Account History Importer" Margin="292,1,9,-1" FontFamily="Bookman Old Style" FontSize="20" BorderBrush="Gray" Foreground="FloralWhite"/>
         </Border>
-        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Left" Margin="216,43,0,0" VerticalAlignment="Top" Width="170" RenderTransformOrigin="1.43,-2.253" Height="28" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" Command="{Binding Path=ImportPushed}" BorderBrush="#FF918C8C"/>
-        <Button x:Name="TableButton" Content="Table" HorizontalAlignment="Left" Margin="216,70,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5" Height="28" FontFamily="Comic Sans MS" FontSize="14" Command="{Binding Path=TablePushed}" BorderBrush="#FF918C8C"/>
-        <Frame x:Name="MainFrame" Margin="150,38,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="1">
+        <!--<Button x:Name="ImportButtonRegi" Content="Import" HorizontalAlignment="Left" Margin="216,43,0,0" VerticalAlignment="Top" Width="170" RenderTransformOrigin="1.43,-2.253" Height="28" Background="#F8D5D8D5"  FontFamily="Comic Sans MS" FontSize="14" BorderBrush="#FF918C8C"/>-->
+        <!--<Button x:Name="TableButtonRegi" Content="Table" HorizontalAlignment="Left" Margin="216,70,0,0" VerticalAlignment="Top" Width="170" Background="#F8D5D8D5" Height="28" FontFamily="Comic Sans MS" FontSize="14" BorderBrush="#FF918C8C"/>-->
+        <Frame x:Name="MainFrame" Margin="150,38,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
         </Frame>
-        <DockPanel Margin="0,38,570,0">
-            <Border Margin="0,0,570,0">
+        <DockPanel Margin="0,38,730,0">
+            <Border Margin="0,0,730,0">
                 <Canvas Margin="0,0,570,0">
                     <StackPanel Background="#FF292728" Width="150" Margin="-90,0,0,0">
                         <StackPanel.Style>
@@ -54,7 +54,7 @@
                             </Style>
                         </StackPanel.Style>
                         <DockPanel Margin="0,0,0,0">
-                            <Button Height="35" Width="150" x:Name="newImportButton" Content="newImportButton" Click="newImportButton_Click">
+                            <Button Height="35" Width="150" x:Name="ImportButton" Content="Import" Command="{Binding Path=ImportPushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
@@ -68,7 +68,7 @@
                             </Button>
                         </DockPanel>
                         <DockPanel Margin="0,0,0,0">
-                            <Button Height="35" Width="150" x:Name="newTableButton">
+                            <Button Height="35" Width="150" x:Name="TableButton" Content="Table" Command="{Binding Path=TablePushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
@@ -91,7 +91,7 @@
                             </Button>
                         </DockPanel>
                         <DockPanel Margin="0,0,0,0">
-                            <Button Height="35" Width="150" x:Name="newExitIcon" Content="newExitIcon">
+                            <Button Height="35" Width="150" x:Name="ExitButton" Content="Exit" Command="{Binding Path=ExitPushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
