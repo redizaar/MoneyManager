@@ -5,9 +5,11 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+
 namespace WpfApp1
 {
-    public partial class MainWindow : INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
         private ButtonCommands btnCommand;
         private List<Transaction> tableAttributes=null;
@@ -25,6 +27,7 @@ namespace WpfApp1
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
             HelpChooseLabel.Visibility = System.Windows.Visibility.Hidden;
             LatestImportDate_Label.Visibility = System.Windows.Visibility.Hidden;
+
 
             if (LatestImportDate_Label.Content.Equals("Label"))
             {
@@ -58,10 +61,7 @@ namespace WpfApp1
         {
             get
             {
-                //if(btnCommand==null)
-                //{
-                    btnCommand = new ButtonCommands(ImportButton.Content.ToString(),this);
-                //}
+                btnCommand = new ButtonCommands(ImportButton.Content.ToString(),this);
 
                 return btnCommand;
             }
@@ -80,6 +80,14 @@ namespace WpfApp1
             get
             {
                 btnCommand = new ButtonCommands(TableButton.Content.ToString(), this);
+                return btnCommand;
+            }
+        }
+        public ButtonCommands ExitPushed
+        {
+            get
+            {
+                btnCommand = new ButtonCommands(ExitButton.Content.ToString(), this);
                 return btnCommand;
             }
         }
@@ -106,6 +114,12 @@ namespace WpfApp1
         public void getTransactions(string bankName,string folderAddress)
         {
             new ImportReadIn(bankName, folderAddress,this);
+        }
+
+        private void newImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(newImportButton.Content);
+            Console.WriteLine(newImportButton.Name);
         }
     }
     public class ButtonCommands : ICommand
@@ -156,7 +170,12 @@ namespace WpfApp1
             }
            else if(buttonContent.Equals("Table"))
             {
-                mainWindow.Content = new TransactionMain(mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+                //mainWindow.Content = new TransactionMain(mainWindow,mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+                mainWindow.MainFrame.Content=new TransactionMain(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+            }
+           else if(buttonContent.Equals("Exit"))
+            {
+                mainWindow.Close();
             }
         }
     }

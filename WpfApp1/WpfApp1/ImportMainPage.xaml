@@ -1,0 +1,22 @@
+﻿<Page x:Class="WpfApp1.ImportMainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1"
+      mc:Ignorable="d"
+      Title="ImportMainPage" Height="367.636" Width="720.907">
+
+    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
+        <Label x:Name="LatestImportDate_Label" Content="CurrentRefreshDate" HorizontalAlignment="Left" Margin="178,64,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.025,-0.102" FontWeight="Bold" FontFamily="Comic Sans MS" Foreground="Red" Height="27" Width="127"/>
+        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="124,10,0,0" VerticalAlignment="Top" Width="216" RenderTransformOrigin="0.643,0.554" Height="22">
+            <ComboBoxItem Content="All" HorizontalAlignment="Left" Width="214"/>
+            <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
+            <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
+            <ComboBoxItem Content="K&amp;H" HorizontalAlignment="Left" Width="213"/>
+        </ComboBox>
+        <Button x:Name="FileBrowser" Content="Open File" HorizontalAlignment="Left" Margin="192,37,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS"/>
+        <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="178,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Height="26"/>
+        <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33"/>
+    </Grid>
+</Page>
