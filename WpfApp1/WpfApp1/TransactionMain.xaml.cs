@@ -89,10 +89,5 @@ namespace WpfApp1
                 TransactionTableXAML.Items.Add(attribute);
             }
         }
-
-        private void ImportButton_Click(object sender, RoutedEventArgs e)
-        {
-            Content = new ImportMainPage();
-        }
     }
 }

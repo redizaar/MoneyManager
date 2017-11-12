@@ -455,6 +455,7 @@ namespace WpfApp1
         {
             Regex balanceRegex1 = new Regex(@"^Egyenleg$");
             Regex balanceRegex2 = new Regex(@"könyvelt egyenleg$");
+            Regex balanceRegex3 = new Regex(@"^Számlaegyenleg$");
 
             if (row != 1)
             {
@@ -465,7 +466,8 @@ namespace WpfApp1
                         if (TransactionSheet.Cells[i, j].Value != null)
                         {
                             string inputData = TransactionSheet.Cells[i, j].Value.ToString();
-                            if (balanceRegex1.IsMatch(inputData) || balanceRegex2.IsMatch(inputData))
+                            if (balanceRegex1.IsMatch(inputData) || balanceRegex2.IsMatch(inputData) || 
+                                balanceRegex3.IsMatch(inputData))
                             {
                                 return j;
                             }
@@ -480,7 +482,8 @@ namespace WpfApp1
                     if (TransactionSheet.Cells[row, j].Value != null)
                     {
                         string inputData = TransactionSheet.Cells[row, j].Value.ToString();
-                        if (balanceRegex1.IsMatch(inputData) || balanceRegex2.IsMatch(inputData))
+                        if (balanceRegex1.IsMatch(inputData) || balanceRegex2.IsMatch(inputData) || 
+                            balanceRegex3.IsMatch(inputData))
                         {
                             return j;
                         }

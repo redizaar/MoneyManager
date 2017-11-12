@@ -23,25 +23,27 @@ namespace WpfApp1
     public partial class ImportMainPage : Page
     {
         private ButtonCommands btnCommand;
-        public ImportMainPage()
+        private MainWindow mainWindow;
+        public ImportMainPage(MainWindow mainWindow)
         {
-            InitializeComponent();
+            DataContext = this;
 
+            InitializeComponent();
+            this.mainWindow = mainWindow;
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
         }
 
 
         private void getTransactions(string bankName, string folderAddress)
         {
-            //new ImportReadIn(bankName, folderAddress, this);
+            new ImportReadIn(bankName, folderAddress, mainWindow);
         }
 
         public ButtonCommands OpenFilePushed
         {
             get
             {
-                btnCommand = new ButtonCommands(FileBrowser.Content.ToString(), this);
-
+                btnCommand = new ButtonCommands(FileBrowser.Content.ToString(),this);
                 return btnCommand;
             }
         }
@@ -56,7 +58,7 @@ namespace WpfApp1
         {
             private string buttonContent;
             private ImportMainPage importPage;
-            public ButtonCommands(string buttonContent, ImportMainPage importPage)
+            public ButtonCommands(string buttonContent,ImportMainPage importPage)
             {
                 this.buttonContent = buttonContent;
                 this.importPage = importPage;
@@ -90,7 +92,7 @@ namespace WpfApp1
                     {
                         importPage.FolderAddressLabel.Content = dlg.FileName;
                     }
-                    importPage.getTransactions(importPage.banksComboBox.Text, importPage.FolderAddressLabel.Content.ToString());
+                    importPage.getTransactions("All", importPage.FolderAddressLabel.Content.ToString());
                 }
             }
         }
