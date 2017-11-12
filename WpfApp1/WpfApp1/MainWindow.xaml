@@ -6,13 +6,10 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="Money Manager" Height="367.636" Width="880">
-    <Grid Margin="0,0,2,0" Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="890" Background="LightSalmon">
-            <Label Content="Account History Importer" Margin="292,1,9,0" FontFamily="Bookman Old Style" FontSize="20" BorderBrush="Gray" Foreground="FloralWhite"/>
-        </Border>
-        <Frame x:Name="MainFrame" Margin="150,38,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
+    <Grid Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
+        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
         </Frame>
-        <DockPanel Margin="0,38,730,0">
+        <DockPanel Margin="0,70,730,0">
             <Border Margin="0,0,730,0">
                 <Canvas Margin="0,0,570,0">
                     <StackPanel Background="#FF292728" Width="150" Margin="-90,0,0,0">
@@ -40,38 +37,25 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
-                        <DockPanel Margin="0,0,0,0">
-                            <Button Height="50" Width="150" x:Name="ImportButton" Content="Import" Command="{Binding Path=ImportPushed}">
+                        <DockPanel Margin="0,0,0,0" x:Name="importDock">
+                            <Button  Height="50" Width="150" x:Name="ImportButton" Content="Import" Command="{Binding Path=ImportPushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
                                             <Image Source="importIcon2.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
                                             <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Import" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
-                                            <Label x:Name="importClickedLabel" Width="5" Height="50" Background="#FF292728" Canvas.Right="0" BorderThickness="0">
-                                            </Label>
                                         </Canvas>
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>
                         </DockPanel>
-                        <DockPanel Margin="0,0,0,0">
+                        <DockPanel Margin="0,0,0,0" x:Name="tableDock">
                             <Button Height="50" Width="150" x:Name="TableButton" Content="Table" Command="{Binding Path=TablePushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
                                             <Image Source="tableIcon6.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
                                             <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Table" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
-                                            <Label x:Name="tableClickedLabel" Width="5" Height="50" Background="#FF292728" Canvas.Right="0" BorderThickness="0">
-                                                <Label.Triggers>
-                                                    <EventTrigger RoutedEvent="MouseEnter">
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <ColorAnimation  To="#FF19AEB6" Storyboard.TargetProperty="(Label.Background).(SolidColorBrush.Color)" FillBehavior="Stop"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </EventTrigger>
-                                                </Label.Triggers>
-                                            </Label>
                                         </Canvas>
                                     </ControlTemplate>
                                 </Button.Template>
@@ -93,6 +77,28 @@
                 </Canvas>
             </Border>
         </DockPanel>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="70" VerticalAlignment="Top" Width="150" Background="#FFCD6C0B">
+            <StackPanel>
+                <Label Content="Financial" FontSize="16" Margin="32,0,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
+                <Label Content="History Importer" FontSize="16" Margin="0,0,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
+            </StackPanel>
+        </Border>
+        <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="725" Background="AliceBlue">
+            <DockPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="importIconTop.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                    <Label Content="Import menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" />
+                </Canvas>
+            </DockPanel>
+        </Border>
+        <Border x:Name="tableMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="725" Background="AliceBlue">
+            <DockPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="tableIcon6.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                    <Label Content="Table menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" />
+                </Canvas>
+            </DockPanel>
+        </Border>
         <!--LightSalmon,LightSkyBlue-->
     </Grid>
 </Window>

@@ -5,15 +5,14 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1"
       mc:Ignorable="d" 
-      d:DesignHeight="367.636" d:DesignWidth="750"
+      d:DesignHeight="305" d:DesignWidth="750"
       Title="TransactionMain">
-    <Grid Height="337" Width="750" VerticalAlignment="Top" Background="#F8D5D8D5">
+    <Grid Height="305" Width="750" VerticalAlignment="Top" Background="#F8D5D8D5">
         <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="0,61,88,23" Grid.ColumnSpan="3">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="Background" Value="LightSalmon"/>
                     <Setter Property="FontWeight" Value="Regular"/>
-                    <Setter Property="FontFamily" Value="Comic Sans MS"/>
                     <Setter Property="BorderThickness" Value="0,0,1,2"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                 </Style>

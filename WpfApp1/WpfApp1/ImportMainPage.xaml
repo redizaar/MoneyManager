@@ -5,9 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1"
       mc:Ignorable="d"
-      Title="ImportMainPage" Height="367.636" Width="720.907">
+      Title="ImportMainPage" Height="305" Width="720.907">
 
-    <Grid Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
+    <Grid Height="305" VerticalAlignment="Top" Background="#F8D5D8D5">
         <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="65,189,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Height="26"/>
         <Label Content="Welcome, " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="usernameLabel" Content="Username by Code" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top"/>
