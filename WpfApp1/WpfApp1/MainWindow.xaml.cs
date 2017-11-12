@@ -116,13 +116,10 @@ namespace WpfApp1
         {
            if(buttonContent.Equals("Import"))
             {
-                //mainWindow.banksComboBox.Visibility = System.Windows.Visibility.Visible;
-                //mainWindow.HelpChooseLabel.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.MainFrame.Content = new ImportMainPage(mainWindow);
             }
            else if(buttonContent.Equals("Table"))
             {
-                //mainWindow.Content = new TransactionMain(mainWindow,mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
                 mainWindow.MainFrame.Content=new TransactionMain(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
             }
            else if(buttonContent.Equals("Exit"))

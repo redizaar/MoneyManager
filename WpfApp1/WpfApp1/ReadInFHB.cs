@@ -95,7 +95,7 @@ namespace WpfApp1
                         }
                     }
                     Console.WriteLine(currentEgyenleg);
-                    transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, currentEgyenleg += osszeg,accountNumber));
+                    transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, "old read IN FHB",accountNumber));
                 }
                 i++;
             }

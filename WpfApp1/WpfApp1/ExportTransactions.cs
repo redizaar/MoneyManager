@@ -52,7 +52,8 @@ namespace WpfApp1
                         WriteWorksheet.Cells[row_number, 11].Value = transctn.getTransactionPrice();
                         WriteWorksheet.Cells[row_number, 15].Value = "havi";
                     }
-                    WriteWorksheet.Cells[row_number, 14].Value = transctn.getAccountNumber();
+                    WriteWorksheet.Cells[row_number, 14].Value = transctn.getTransactionDescription();
+                    WriteWorksheet.Cells[row_number, 16].Value = transctn.getAccountNumber();
                     row_number++;
                     Range line = (Range)WriteWorksheet.Rows[row_number];
                     line.Insert();

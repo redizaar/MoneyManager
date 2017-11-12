@@ -9,28 +9,29 @@ namespace WpfApp1
     public class Transaction
     {
         private int balance_rn ;
-        private int balance_past;
+        public string transactionDescription { get; set; }
         public string transactionDate { get; set; }
         public int transactionPrice { get; set; }
         private string accountNumber;
         public string writeDate { get; set; }
 
 
-        public Transaction(int balance_rn,string date,int price,int balance_past,string accountNumber)
+        public Transaction(int balance_rn,string date,int price,string description, string accountNumber)
         {
             this.balance_rn = balance_rn;
             this.transactionDate = date;
             this.transactionPrice = price;
-            this.balance_past = balance_past;
+            this.transactionDescription = description;
             this.accountNumber = accountNumber;
         }
-        public Transaction(string writeDate,string transactionDate,int balance,int price,string accountNumber)
+        public Transaction(string writeDate,string transactionDate,int balance,int price,string accountNumber,string transactionDescription)
         {
             this.writeDate = writeDate;
             this.transactionDate = transactionDate;
             this.balance_rn = balance;
             this.transactionPrice = price;
             this.accountNumber = accountNumber;
+            this.transactionDescription = transactionDescription;
         }
         public void setWriteDate(String todaysDate)
         {
@@ -52,9 +53,9 @@ namespace WpfApp1
         {
             return balance_rn;
         }
-        public int getBalance_past()
+        public string getTransactionDescription()
         {
-            return balance_past;
+            return transactionDescription;
         }
         public string getTransactionDate()
         {
