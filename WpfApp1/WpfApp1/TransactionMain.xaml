@@ -20,7 +20,7 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header=" Date of Transaction" Width="130" Binding="{Binding transactionDate}"/>
-                <DataGridTextColumn Header=" Description" Width="180"/>
+                <DataGridTextColumn Header=" Description" Width="180" Binding="{Binding transactionDescription}"/>
                 <DataGridComboBoxColumn Header=" Category"  x:Name="CategoryColumn" Width="120" ItemsSource="{Binding categoryName}" DisplayMemberPath="Category">
                     <DataGridComboBoxColumn.ElementStyle>
                         <Style TargetType="{x:Type ComboBox}">

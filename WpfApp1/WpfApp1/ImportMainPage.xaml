@@ -8,15 +8,7 @@
       Title="ImportMainPage" Height="367.636" Width="720.907">
 
     <Grid Height="337" VerticalAlignment="Top" Background="#F8D5D8D5">
-        <ComboBox x:Name="banksComboBox" HorizontalAlignment="Left" Margin="338,238,0,0" VerticalAlignment="Top" Width="216" RenderTransformOrigin="0.643,0.554" Height="22">
-            <ComboBoxItem Content="All" HorizontalAlignment="Left" Width="214"/>
-            <ComboBoxItem Content="OTP" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
-            <ComboBoxItem Content="FHB" HorizontalAlignment="Left" Width="216" Margin="0,0,-2,0"/>
-            <ComboBoxItem Content="K&amp;H" HorizontalAlignment="Left" Width="213"/>
-        </ComboBox>
-        <Button x:Name="FileBrowserRegi" Content="Open File" HorizontalAlignment="Left" Margin="407,265,0,0" VerticalAlignment="Top" Width="75" Height="22" Background="#FF99FFFF" RenderTransformOrigin="3.45,0.749" FontWeight="Bold" FontFamily="Comic Sans MS"/>
         <Label x:Name="FolderAddressLabel" Content="FolderAdress" HorizontalAlignment="Left" Margin="65,189,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.294,-0.503" Width="356" Height="26"/>
-        <Label x:Name="HelpChooseLabel" Content="Choose your bank : " HorizontalAlignment="Left" Margin="196,238,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.513,0.308" FontWeight="Bold" FontFamily="Comic Sans MS" Height="33"/>
         <Label Content="Welcome, " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="usernameLabel" Content="Username by Code" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Date of Last Import: " HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>

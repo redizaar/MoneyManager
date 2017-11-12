@@ -49,7 +49,7 @@ namespace WpfApp1
                 }
                 i++;
                 need_values = true;
-                transactions.Add(new Transaction(egyenleg_rn, transactionDate, osszeg, new_egyenleg,accountNumber));
+                transactions.Add(new Transaction(egyenleg_rn, transactionDate, osszeg, "old read IN OTP", accountNumber));
             }
             bankHanlder.addTransactions(transactions);
         }

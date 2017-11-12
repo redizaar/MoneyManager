@@ -30,6 +30,7 @@ namespace WpfApp1
                 string transactionPriceString = "";
                 int transactionPrice = 0;
                 string accountNumber = "";
+                string description = "";
 
                 writeoutDate = ReadWorksheet.Cells[i, 1].Value.ToString();
                 transactionDate = ReadWorksheet.Cells[i, 2].Value.ToString();
@@ -45,9 +46,13 @@ namespace WpfApp1
                     transactionPriceString = ReadWorksheet.Cells[i, 9].Value.ToString();
                     transactionPrice = int.Parse(transactionPriceString);
                 }
-                accountNumber = ReadWorksheet.Cells[i, 14].Value.ToString();
+                accountNumber = ReadWorksheet.Cells[i, 16].Value.ToString();
+                if(ReadWorksheet.Cells[i, 14].Value!=null)
+                {
+                    description = ReadWorksheet.Cells[i, 14].Value.ToString();
+                }
 
-                savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber));
+                savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber,description));
                 i++;
             }
         }

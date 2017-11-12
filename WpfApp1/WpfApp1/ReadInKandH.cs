@@ -36,7 +36,7 @@ namespace WpfApp1
                 osszegString = worksheet.Cells[i, 8].Value.ToString();
                 osszeg = int.Parse(osszegString);
                 currentEgyenleg += osszeg;
-                transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, currentEgyenleg += osszeg,accountNumber));
+                transactions.Add(new Transaction(currentEgyenleg, transactionDate, osszeg, "old read IN OTP", accountNumber));
                 i--;
             }
             bankHanlder.addTransactions(transactions);

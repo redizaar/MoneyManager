@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace WpfApp1
 {
@@ -110,6 +111,7 @@ namespace WpfApp1
 
         public void readOutTransactionColumns(int row, int maxColumn)
         {
+            int descriptionColumn = getDescriptionColumn(row, maxColumn);
             int dateColumn=getDateColumn(row,maxColumn);
             string pricecolumnType = isMultiplePriceColumn(row,maxColumn);
             int singlepriceColumn = -1;
@@ -126,14 +128,77 @@ namespace WpfApp1
                 this.multipleColumn = true;
             }
             int balaceColumn=getAccountBalanceColumn(row,maxColumn);
-            if(balaceColumn==-1)
-            {
-
-            }
-            readOutTransactions(row,maxColumn,dateColumn,singlepriceColumn,balaceColumn);
+            readOutTransactions(row,maxColumn,dateColumn,singlepriceColumn,balaceColumn,descriptionColumn);
         }
 
-        private void readOutTransactions(int row, int maxColumn,int dateColumn, int singlepriceColumn, int balaceColumn)
+        private int getDescriptionColumn(int row, int maxColumn)
+        {
+            Regex descrRegex1 = new Regex(@"^Közlemény$");
+            Regex descrRegex2 = new Regex(@"típusa$");
+            Regex descrRegex3 = new Regex(@"^Típus$");
+            Regex descrRegex4 = new Regex(@"Leírás$");
+
+            List<int> descrColumns=new List<int>();
+            List<string> descrColumnNames = new List<string>();
+            if (row != 1)
+            {
+                for (int i = row - 1; i <= row + 2; i++)
+                {
+                    for (int j = 1; j < maxColumn; j++)
+                    {
+                        if (TransactionSheet.Cells[i, j].Value != null)
+                        {
+                            string inputData = TransactionSheet.Cells[i, j].Value.ToString();
+                            if (descrRegex1.IsMatch(inputData) || descrRegex2.IsMatch(inputData) ||
+                                descrRegex3.IsMatch(inputData) || descrRegex4.IsMatch(inputData))
+                            {
+                                descrColumns.Add(j);
+                                descrColumnNames.Add(inputData);
+                            }
+                        }
+                    }
+                }
+            }
+            else//colum titles first row
+            {
+                for (int j = 1; j < maxColumn; j++)
+                {
+                    if (TransactionSheet.Cells[row, j].Value != null)
+                    {
+                        string inputData = TransactionSheet.Cells[row, j].Value.ToString();
+                        if (descrRegex1.IsMatch(inputData) || descrRegex2.IsMatch(inputData) ||
+                                descrRegex3.IsMatch(inputData) || descrRegex4.IsMatch(inputData))
+                        {
+                            descrColumns.Add(j);
+                            descrColumnNames.Add(inputData);
+                        }
+                    }
+                }
+            }
+            if (descrColumns.Count != 0)
+            {
+                if (descrColumns.Count == 2)
+                {
+                    MessageBoxResult result = MessageBox.Show("Change " + descrColumnNames[0] + " from deafult?", descrColumnNames[0] + " or " + descrColumnNames[1],
+                        MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        return descrColumns[1];
+                    }
+                    else
+                    {
+                        return descrColumns[0];
+                    }
+                }
+                else if(descrColumns.Count==1)
+                {
+                    return descrColumns[0];
+                }
+            }
+            return 0;
+        }
+
+        private void readOutTransactions(int row, int maxColumn,int dateColumn, int singlepriceColumn, int balaceColumn,int descriptionColumn)
         {
             if(row==1)
             {
@@ -178,6 +243,7 @@ namespace WpfApp1
                             string accountNumber = getAccountNumber();
                             string transactionPriceString = TransactionSheet.Cells[row, singlepriceColumn].Value.ToString();
                             string transactionBalanceString = TransactionSheet.Cells[row, balaceColumn].Value.ToString();
+                            string transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
 
                             int transactionPrice = 0;
                             int transactionBalance = 0;
@@ -190,7 +256,7 @@ namespace WpfApp1
                             {
 
                             }
-                            transaction.Add(new Transaction(transactionBalance, transactionDate, transactionPrice, transactionBalance + transactionPrice, accountNumber));
+                            transaction.Add(new Transaction(transactionBalance, transactionDate, transactionPrice, transactionDescription, accountNumber));
                         }
                         else
                         {
@@ -206,6 +272,7 @@ namespace WpfApp1
                             string transactionDate = TransactionSheet.Cells[row, dateColumn].Value.ToString();
                             string accountNumber = getAccountNumber();
                             string transactionPriceString = TransactionSheet.Cells[row, singlepriceColumn].Value.ToString();
+                            string transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
                             int transactionPrice = 0;
                             try
                             {
@@ -217,13 +284,13 @@ namespace WpfApp1
                             }
                             if (this.getIsFirstTransaction())//we pretend that the balance is 0
                             {
-                                transaction.Add(new Transaction(transactionPrice, transactionDate, transactionPrice, 0, accountNumber));
+                                transaction.Add(new Transaction(transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
                                 this.setPastTransactionPrice(transactionPrice);
                                 this.setIsFirstTransaction(false);
                             }
                             else
                             {
-                                transaction.Add(new Transaction(this.getPastTransactionPrice() + transactionPrice, transactionDate, transactionPrice, this.getPastTransactionPrice(), accountNumber));
+                                transaction.Add(new Transaction(this.getPastTransactionPrice() + transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
                                 this.setPastTransactionPrice(this.getPastTransactionPrice() + transactionPrice);
                             }
                         }
@@ -238,8 +305,8 @@ namespace WpfApp1
             }
             else//multiple price columns
             {
-                Regex priceRegex1 = new Regex(@"Terhelés$");
-                Regex priceRegex2 = new Regex(@"Jóváírás$");
+                Regex priceRegex1 = new Regex(@"^Terhelés$");
+                Regex priceRegex2 = new Regex(@"^Jóváírás$");
                 int costPriceColumn = 0;
                 int incomePriceColumn = 0;
                 for (int i = row - 1; i < row + 1; i++)//a row!=1 azt már lekezeltük
@@ -292,6 +359,11 @@ namespace WpfApp1
                                     costPriceString = TransactionSheet.Cells[row, costPriceColumn].Value.ToString();
                                     costPrice = int.Parse(costPriceString);
                                 }
+                                string transactionDescription = "-";
+                                if(TransactionSheet.Cells[row, descriptionColumn].Value!=null)
+                                {
+                                    transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
+                                }
                                 string transactionBalanceString = "";
                                 int transactionBalance = 0;
                                 int calcuatedBalance = 0;
@@ -318,22 +390,22 @@ namespace WpfApp1
                                 {
                                     if (incomePrice != 0)
                                     {
-                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, incomePrice, calcuatedBalance + incomePrice, accountNumber));
+                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, incomePrice, transactionDescription, accountNumber));
                                     }
                                     else if (costPrice != 0)
                                     {
-                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, costPrice, calcuatedBalance + costPrice, accountNumber));
+                                        transaction.Add(new Transaction(calcuatedBalance, transactionDate, costPrice, transactionDescription, accountNumber));
                                     }
                                 }
                                 else
                                 {
                                     if (incomePrice != 0)
                                     {
-                                        transaction.Add(new Transaction(transactionBalance, transactionDate, incomePrice, transactionBalance + incomePrice, accountNumber));
+                                        transaction.Add(new Transaction(transactionBalance, transactionDate, incomePrice, transactionDescription, accountNumber));
                                     }
                                     else if (costPrice != 0)
                                     {
-                                        transaction.Add(new Transaction(transactionBalance, transactionDate, costPrice, transactionBalance + costPrice, accountNumber));
+                                        transaction.Add(new Transaction(transactionBalance, transactionDate, costPrice, transactionDescription, accountNumber));
                                     }
                                 }
                             }
@@ -383,17 +455,22 @@ namespace WpfApp1
                                 {
 
                                 }
+                                string transactionDescription = "-";
+                                if (TransactionSheet.Cells[row, descriptionColumn].Value != null)
+                                {
+                                    transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
+                                }
                                 if (this.getIsFirstTransaction())//we pretend that the balance is 0
                                 {
                                     if (incomePrice != 0)
                                     {
-                                        transaction.Add(new Transaction(incomePrice, transactionDate, incomePrice, 0, accountNumber));
+                                        transaction.Add(new Transaction(incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
                                         this.setPastTransactionPrice(incomePrice);
                                         this.setIsFirstTransaction(false);
                                     }
                                     else if (costPrice != 0)
                                     {
-                                        transaction.Add(new Transaction(costPrice, transactionDate, costPrice, 0, accountNumber));
+                                        transaction.Add(new Transaction(costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
                                         this.setPastTransactionPrice(costPrice);
                                         this.setIsFirstTransaction(false);
                                     }
@@ -402,12 +479,12 @@ namespace WpfApp1
                                 {
                                     if (incomePrice != 0)
                                     {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + incomePrice, transactionDate, incomePrice, this.getPastTransactionPrice(), accountNumber));
+                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
                                         this.setPastTransactionPrice(this.getPastTransactionPrice() + incomePrice);
                                     }
                                     else if (costPrice != 0)
                                     {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + costPrice, transactionDate, costPrice, this.getPastTransactionPrice(), accountNumber));
+                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
                                         this.setPastTransactionPrice(this.getPastTransactionPrice() + costPrice);
                                     }
                                 }
