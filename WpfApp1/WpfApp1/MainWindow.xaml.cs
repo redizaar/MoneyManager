@@ -19,8 +19,8 @@ namespace WpfApp1
         {
             DataContext = this;
             InitializeComponent();
+            tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
 
-            
             startUpReadIn();
         }
 
@@ -50,8 +50,8 @@ namespace WpfApp1
         {
             get
             {
-                    btnCommand = new ButtonCommands(ImportButton.Content.ToString(), this);
-                    return btnCommand;
+                btnCommand = new ButtonCommands(ImportButton.Content.ToString(), this);
+                return btnCommand;
             }
         }
         public ButtonCommands TablePushed
@@ -117,10 +117,18 @@ namespace WpfApp1
            if(buttonContent.Equals("Import"))
             {
                 mainWindow.MainFrame.Content = new ImportMainPage(mainWindow);
+                mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
+                mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Visible;
+                mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(27,190,215));
+                mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(41, 39, 40));
             }
            else if(buttonContent.Equals("Table"))
             {
                 mainWindow.MainFrame.Content=new TransactionMain(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+                mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Hidden;
+                mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Visible;
+                mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(27, 190, 215));
+                mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(41, 39, 40));
             }
            else if(buttonContent.Equals("Exit"))
             {

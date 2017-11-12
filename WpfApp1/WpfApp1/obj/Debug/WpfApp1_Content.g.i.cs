@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("attachfile.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("importicontop.png")]
 
 
