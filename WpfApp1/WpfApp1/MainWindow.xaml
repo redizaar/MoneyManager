@@ -79,11 +79,15 @@
         </DockPanel>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="70" VerticalAlignment="Top" Width="150" Background="#FFCD6C0B">
             <StackPanel>
-                <Label Content="Financial" FontSize="16" Margin="32,0,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
-                <Label Content="History Importer" FontSize="16" Margin="0,0,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
+                <DockPanel >
+                    <Image Source="dollar3.png" Width="30" Height="30" Margin="2,0,0,0"></Image>
+                    <Label Content="Financial" FontSize="15" Margin="5,3,0,0" Foreground="White" FontFamily="Tempus Sans ITC"/>
+                    <Image Source="dollar3.png" Width="30" Height="30"></Image>
+                </DockPanel>
+                <Label Content="History Importer" FontSize="15" Margin="15,0,0,0" Foreground="White" FontFamily="Tempus Sans ITC"/>
             </StackPanel>
         </Border>
-        <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="725" Background="AliceBlue">
+        <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="660" Background="AliceBlue">
             <DockPanel Margin="0,0,0,0">
                 <Canvas>
                     <Image Source="importIconTop.png" Width="70" Margin="10,5,635,0" Height="55"/>
@@ -91,13 +95,22 @@
                 </Canvas>
             </DockPanel>
         </Border>
-        <Border x:Name="tableMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="725" Background="AliceBlue">
+        <Border x:Name="tableMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="660" Background="AliceBlue">
             <DockPanel Margin="0,0,0,0">
                 <Canvas>
                     <Image Source="tableIcon6.png" Width="70" Margin="10,5,635,0" Height="55"/>
                     <Label Content="Table menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" />
                 </Canvas>
             </DockPanel>
+        </Border>
+        <Border x:Name="userNotification" BorderBrush="Black" BorderThickness="1,0,0,1" HorizontalAlignment="Left" Height="70" Margin="810,0,0,0" VerticalAlignment="Top" Width="97" Background="AliceBlue">
+            <StackPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="exclamIcon.png" Height="20" Margin="30,0,0,0"/>
+                    <Image Source="notificationIcon.png" Width="70" Margin="-10,5,0,0" Height="45"/>
+                    <Label Content="User" Margin="5,40,0,0"/>
+                </Canvas>
+            </StackPanel>
         </Border>
         <!--LightSalmon,LightSkyBlue-->
     </Grid>

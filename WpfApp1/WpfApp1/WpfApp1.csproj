@@ -146,22 +146,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="dollar_uj2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="importIcon2.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="dollar3.png" />
+    <Resource Include="exclamIcon.png" />
     <Resource Include="exitIcon4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="tableIcon6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="attachFile.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="importIcon2.png" />
     <Resource Include="importIconTop.png" />
+    <Resource Include="notificationIcon.png" />
+    <Resource Include="tableIcon6.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
