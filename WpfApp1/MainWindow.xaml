@@ -1,0 +1,115 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Money Manager" Height="367.636" Width="880">
+    <Grid Height="337" VerticalAlignment="Top" Background="#ECECEA">
+        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
+        </Frame>
+        <DockPanel Margin="0,70,730,0" Background="#ECECEA">
+            <Border Margin="0,0,730,0">
+                <Canvas Margin="0,0,570,0">
+                    <StackPanel Background="#D9853B" Width="150" Margin="-90,0,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="-90,0,0,0" To="0,0,0,0" DecelerationRatio=".4" Duration="0:0:1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="-90,0,0,0" DecelerationRatio=".9" Duration="0:0:1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <DockPanel Margin="0,0,0,0" x:Name="importDock">
+                            <Button  Height="50" Width="150" x:Name="ImportButton" Content="Import" Command="{Binding Path=ImportPushed}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="attachIcon2.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Import" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,0" x:Name="tableDock">
+                            <Button Height="50" Width="150" x:Name="TableButton" Content="Table" Command="{Binding Path=TablePushed}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="tableIcon8.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Table" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,0">
+                            <Button Height="50" Width="150" x:Name="ExitButton" Content="Exit" Command="{Binding Path=ExitPushed}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="exitIcon5.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Exit" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                    </StackPanel>
+                </Canvas>
+            </Border>
+        </DockPanel>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="70" VerticalAlignment="Top" Width="150" Background="#558C89">
+            <StackPanel>
+                <DockPanel >
+                    <Label Content="Financial" FontSize="15" Margin="40,3,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
+                </DockPanel>
+                <Label Content="History Importer" FontSize="15" Margin="10,0,0,0" Foreground="White" FontFamily="Bookman Old Style"/>
+            </StackPanel>
+        </Border>
+        <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="660" Background="#74AFAD">
+            <DockPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="attachIcon2.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                    <Label Content="Import menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                </Canvas>
+            </DockPanel>
+        </Border>
+        <Border x:Name="tableMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="660" Background="#74AFAD">
+            <DockPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="tableIcon8.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                    <Label Content="Table menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                </Canvas>
+            </DockPanel>
+        </Border>
+        <Border x:Name="userNotification" BorderBrush="Black" BorderThickness="1,0,0,1" HorizontalAlignment="Left" Height="70" Margin="810,0,0,0" VerticalAlignment="Top" Width="97" Background="#74AFAD">
+            <StackPanel Margin="0,0,0,0">
+                <Canvas>
+                    <Image Source="exclamIcon.png" Height="20" Margin="30,0,0,0"/>
+                    <Image Source="alarmIcon3.png" Width="70" Margin="-10,5,0,0" Height="45"/>
+                    <Label Content="User" Margin="5,40,0,0"/>
+                </Canvas>
+            </StackPanel>
+        </Border>
+        <!--LightSalmon,LightSkyBlue-->
+    </Grid>
+</Window>
