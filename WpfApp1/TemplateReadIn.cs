@@ -196,11 +196,8 @@ namespace WpfApp1
                 }
                 else if(descrColumns.Count>2)
                 {
-                    /*
-                    for(int i=0;i<descrColumns;)
-                    importMainPage.descriptionComboBox.Items.Insert
-                    */
-                    }
+                    return descrColumns[0];
+                }
             }
             return 0;
         }
@@ -367,16 +364,9 @@ namespace WpfApp1
                                     costPrice = int.Parse(costPriceString);
                                 }
                                 string transactionDescription = "-";
-                                try
+                                if (TransactionSheet.Cells[row, descriptionColumn].Value != null)
                                 {
-                                    if (TransactionSheet.Cells[row, descriptionColumn].Value != null)
-                                    {
-                                        transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-
+                                    transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
                                 }
                                 string transactionBalanceString = "";
                                 int transactionBalance = 0;

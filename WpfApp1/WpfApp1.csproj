@@ -68,6 +68,7 @@
     <Compile Include="TransactionMain.xaml.cs">
       <DependentUpon>TransactionMain.xaml</DependentUpon>
     </Compile>
+    <Compile Include="User.cs" />
     <Page Include="ImportMainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -146,28 +147,23 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="dollar3.png" />
     <Resource Include="exclamIcon.png" />
-    <Resource Include="exitIcon4.png" />
-    <Resource Include="importIcon2.png" />
-    <Resource Include="importIconTop.png" />
     <Resource Include="notificationIcon.png" />
-    <Resource Include="tableIcon6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="attachIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="attachIcon2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="tableIcon7.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="tableIcon8.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="exitIcon5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="warningIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="alarmIcon3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
