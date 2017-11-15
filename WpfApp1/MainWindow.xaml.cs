@@ -14,14 +14,18 @@ namespace WpfApp1
         private ButtonCommands btnCommand;
         private List<Transaction> tableAttributes=null;
         Boolean newImport = false;
-        private string accountNumber="";
+        public User currentUser=new User();
+        private string accountNumber= "11773470-00817789";
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
-            tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
-
+            tableMenuTop.Visibility = System.Windows.Visibility.Hidden; //importmenu is default
             startUpReadIn();
+            currentUser.setUsername("Patrik01");
+            currentUser.setAccountNumber("11773470-00817789");
+
+            currentUserLabel.Content = currentUser.getUsername(); //notification label
         }
 
         public void setTableAttribues(List<Transaction> impoertedTransactions,String accountNumber)
@@ -45,6 +49,14 @@ namespace WpfApp1
         public List<Transaction> getTableAttributes()
         {
             return tableAttributes;
+        }
+        public User getCurrentUser()
+        {
+            return currentUser;
+        }
+        public void setAccountNumber(string _accountNumber)
+        {
+            accountNumber = _accountNumber;
         }
         public ButtonCommands ImportPushed
         {
@@ -116,7 +128,7 @@ namespace WpfApp1
         {
            if(buttonContent.Equals("Import"))
             {
-                mainWindow.MainFrame.Content = new ImportMainPage(mainWindow);
+                mainWindow.MainFrame.Content = ImportMainPage.getInstance(mainWindow);
                 mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
                 mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
@@ -124,7 +136,7 @@ namespace WpfApp1
             }
            else if(buttonContent.Equals("Table"))
             {
-                mainWindow.MainFrame.Content=new TransactionMain(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+                mainWindow.MainFrame.Content=TransactionMain.getInstance(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
                 mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Hidden;
                 mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));

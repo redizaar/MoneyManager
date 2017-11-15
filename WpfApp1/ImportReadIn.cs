@@ -46,6 +46,8 @@ namespace WpfApp1
                     //so far we got the Starting Row(of the transactions),Number of Columns, account number
                     TemplateBank.readOutTransactionColumns(TemplateBank.getStartingRow(), TemplateBank.getNumberOfColumns());
                 }
+                excel.Application.Quit();
+                excel.Quit();
             }
         }
         ~ImportReadIn()

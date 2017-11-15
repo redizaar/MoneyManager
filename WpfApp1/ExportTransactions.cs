@@ -15,18 +15,19 @@ namespace WpfApp1
         Worksheet WriteWorksheet;
         _Application excel = new _Excel.Application();
         private MainWindow mainWindow;
-
+        private string importerAccountNumber;
         public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
                                                     //BUT FIRST - check if the transaction is already exported or not 
             List<Transaction> neededTransactions = newTransactions(transactions);
-
+            SavedTransactions.addToSavedTransactions(neededTransactions);//adding the freshyl imported transactions to the saved 
+            ImportMainPage.getInstance(mainWindow).getUserStatistics(importerAccountNumber);
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
             if (neededTransactions != null)
             {
-                string todaysDate = DateTime.Now.ToString("yyyy-MM-dd"); ;
+                string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
                 int row_number = 1;
                 while (WriteWorksheet.Cells[row_number, 1].Value != null)
                 {
@@ -60,15 +61,17 @@ namespace WpfApp1
                 }
                 try
                 {
-                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                                        false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
-                                         Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                    excel.DisplayAlerts = false;
+                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault,
+                        Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges,
+                        Type.Missing, Type.Missing);
                 }
                 catch(Exception e)
                 {
 
                 }
-                WriteWorkbook.Close();
+                excel.Application.Quit();
+                excel.Quit();
             }
             else
             {
@@ -79,7 +82,8 @@ namespace WpfApp1
         {
             List<Transaction> savedTransactions = SavedTransactions.getSavedTransactions();
             List<Transaction> neededTransactions=new List<Transaction>();
-            string accountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
+            importerAccountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
+            mainWindow.setAccountNumber(importerAccountNumber);
             if (savedTransactions.Count != 0)//if the export file is not empty we scan it
             {
                 List<Transaction> tempTransactions = new List<Transaction>();
@@ -87,7 +91,7 @@ namespace WpfApp1
                 {
                    //egy külön listába tesszük azokat az elemeket a már elmentet tranzakciókból ahol a bankszámlaszám
                    //megegyezik az importálandó bankszámlaszámmal
-                   if(saved.getAccountNumber().Equals(accountNumber))
+                   if(saved.getAccountNumber().Equals(importerAccountNumber))
                     {
                         tempTransactions.Add(saved);
                     }
@@ -114,7 +118,7 @@ namespace WpfApp1
                     }
                     if(neededTransactions.Count==0)
                     {
-                        mainWindow.setTableAttribues(savedTransactions, accountNumber);
+                        mainWindow.setTableAttribues(savedTransactions, importerAccountNumber);
                         //only pass the saved transactions because we didn't add new
                         //and the accountNumber so we can select it by user
                     }
@@ -163,6 +167,14 @@ namespace WpfApp1
                 }
                 return importedTransactions;
             }
+        }
+        public string geImporterAccountNumber()
+        {
+            return importerAccountNumber;
+        }
+        public void setimporterAccountNumber(string value)
+        {
+            importerAccountNumber = value;
         }
         ~ExportTransactions()
         {
