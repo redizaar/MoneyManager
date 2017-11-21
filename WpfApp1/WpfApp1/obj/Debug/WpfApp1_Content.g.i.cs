@@ -8,12 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dollar3.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("exclamicon.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("exiticon4.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("importicon2.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("importicontop.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("notificationicon.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("tableicon6.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("alarmicon3.png")]
 
 

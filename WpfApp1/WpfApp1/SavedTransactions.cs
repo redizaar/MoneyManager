@@ -14,8 +14,8 @@ namespace WpfApp1
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
         static List<Transaction> savedTransactions;
-
-        public SavedTransactions()
+        private static SavedTransactions instance;
+        private SavedTransactions()
         {
             savedTransactions = new List<Transaction>();
             ReadWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
@@ -58,14 +58,22 @@ namespace WpfApp1
         }
         public static List<Transaction> getSavedTransactions()
         {
-            if (savedTransactions != null)
+             return savedTransactions;
+        }
+        public static void addToSavedTransactions(List<Transaction> newImported)
+        {
+            for(int i=0;i<newImported.Count;i++)
             {
-                return savedTransactions;
+                savedTransactions.Add(newImported[i]);
             }
-            else
+        }
+        public static SavedTransactions getInstance()
+        {
+            if(instance==null)
             {
-                return null;
+                instance = new SavedTransactions();
             }
+            return instance;
         }
         ~SavedTransactions()
         {
