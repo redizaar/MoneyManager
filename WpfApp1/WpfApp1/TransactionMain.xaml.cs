@@ -20,20 +20,21 @@ namespace WpfApp1
         private List<Transaction> tableAttribues;
         private List<TransactionCategory> categories;
         public List<string> categoryName { get; set; }
-        public MainWindow ImportMenu;
-        public TransactionMain(MainWindow mainWindow,List<Transaction> tableAttribues, String accountNumber)
+        private static TransactionMain instance;
+
+        private TransactionMain(MainWindow mainWindow,List<Transaction> tableAttribues, String accountNumber)
         {
             this.DataContext = this;
-            this.ImportMenu = mainWindow;
+            InitializeComponent();
             if (TransactionTableXAML != null)
             {
                 TransactionTableXAML.Items.Clear();
             }
-            if (tableAttribues != null)
+            if (tableAttribues != null && tableAttribues!=this.tableAttribues)
             {
                 foreach (var transaction in tableAttribues)
                 {
-                    if (transaction.getWriteDate() != null)
+                    if (transaction.getWriteDate() != null && transaction.getWriteDate().Length>=12)
                     {
                         transaction.setWriteDate(transaction.getWriteDate().Substring(0, 12));
                     }
@@ -41,14 +42,23 @@ namespace WpfApp1
                     {
                         transaction.setWriteDate(DateTime.Now.ToString("yyyy/MM/dd"));
                     }
-                    if (transaction.getTransactionDate().Length > 12)
+                }
+            }
+            else if(tableAttribues==null)
+            {
+                foreach (var transaction in SavedTransactions.getSavedTransactions())
+                {
+                    if (transaction.getWriteDate() != null && transaction.getWriteDate().Length != 12)
                     {
-                        transaction.setTransactionDate(transaction.getTransactionDate().Substring(0, 12));
+                        transaction.setWriteDate(transaction.getWriteDate().Substring(0, 12));
+                    }
+                    else
+                    {
+                        transaction.setWriteDate(DateTime.Now.ToString("yyyy/MM/dd"));
                     }
                 }
             }
-            InitializeComponent();
-            if (this.tableAttribues != tableAttribues && tableAttribues != null)
+            if ((this.tableAttribues != tableAttribues) && (tableAttribues != null))
             {
                 this.tableAttribues = tableAttribues;
                 if (accountNumber.Equals(""))
@@ -60,6 +70,10 @@ namespace WpfApp1
                 {
                     addAtribuesToTable(accountNumber);
                 }
+            }
+            else
+            {
+                addAtribuesToTable(accountNumber);
             }
         }
         private void addAtribuesToTable(String accountNumber)
@@ -73,7 +87,7 @@ namespace WpfApp1
             }
             else
             {
-                foreach (var attribute in tableAttribues)
+                foreach (var attribute in SavedTransactions.getSavedTransactions())
                 {
                     if (attribute.getAccountNumber().Equals(accountNumber))//only saved files
                     {
@@ -88,6 +102,14 @@ namespace WpfApp1
             {
                 TransactionTableXAML.Items.Add(attribute);
             }
+        }
+        public static TransactionMain getInstance(MainWindow mainWindow,List<Transaction> attributes,string accountnumber)
+        {
+            if(instance==null)
+            {
+                instance = new TransactionMain(mainWindow,attributes,accountnumber);
+            }
+            return instance;
         }
     }
 }

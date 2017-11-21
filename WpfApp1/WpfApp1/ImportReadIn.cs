@@ -22,6 +22,7 @@ namespace WpfApp1
             this.path = path;
             this.bankName = bankName;
             this.mainWindow = mainWindow;
+            //this.importMainPage = importMainPage;
 
             if (path != "FolderAdress")//a path wasn't choosen
             {
@@ -41,10 +42,12 @@ namespace WpfApp1
                 }
                 else if (bankName.Equals("All"))
                 {
-                    TemplateReadIn TemplateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet);
+                    TemplateReadIn TemplateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet,mainWindow);
                     //so far we got the Starting Row(of the transactions),Number of Columns, account number
                     TemplateBank.readOutTransactionColumns(TemplateBank.getStartingRow(), TemplateBank.getNumberOfColumns());
                 }
+                excel.Application.Quit();
+                excel.Quit();
             }
         }
         ~ImportReadIn()

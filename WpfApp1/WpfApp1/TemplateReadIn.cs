@@ -20,13 +20,16 @@ namespace WpfApp1
         private int pastTransactionPrice;//in case of missing Balance column..
         private bool isFirstTransaction;//in case of missing Balance column..
         private string accountNumber;
+        private MainWindow mainWindow;
         private bool multipleColumn;
         private bool calculatedBalance;//in case of having a balance column , but it is null in some of the rows..........
 
-        public TemplateReadIn(ImportReadIn importReadin, Workbook workbook, Worksheet worksheet)
+        public TemplateReadIn(ImportReadIn importReadin, Workbook workbook, Worksheet worksheet,MainWindow mainWindow)
         {
+
             worksheet = workbook.Worksheets[1];
             this.bankHanlder = importReadin;
+            this.mainWindow = mainWindow;
             transactions = new List<Transaction>();
             this.TransactionSheet = worksheet;
             this.multipleColumn = false;
@@ -204,6 +207,13 @@ namespace WpfApp1
 
         private void readOutTransactions(int row, int maxColumn,int dateColumn, int singlepriceColumn, int balaceColumn,int descriptionColumn)
         {
+            Console.WriteLine("Tranzakciok sora: " + row);
+            Console.WriteLine("Oszlopok szama: " + maxColumn);
+            Console.WriteLine("Felhasznalo bankszamlaszama: " + accountNumber);
+            Console.WriteLine("## Tranzakcio oszlopszamai ##");
+            Console.WriteLine("Tranzakcio datuma: " + dateColumn);
+            Console.WriteLine("Tranzakcio osszege: " + singlepriceColumn);
+            Console.WriteLine("Tranazakcio leirasa: " + descriptionColumn);
             if(row==1)
             {
                 row++;
@@ -364,16 +374,9 @@ namespace WpfApp1
                                     costPrice = int.Parse(costPriceString);
                                 }
                                 string transactionDescription = "-";
-                                try
+                                if (TransactionSheet.Cells[row, descriptionColumn].Value != null)
                                 {
-                                    if (TransactionSheet.Cells[row, descriptionColumn].Value != null)
-                                    {
-                                        transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-
+                                    transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
                                 }
                                 string transactionBalanceString = "";
                                 int transactionBalance = 0;

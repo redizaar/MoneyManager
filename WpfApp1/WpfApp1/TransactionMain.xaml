@@ -7,38 +7,49 @@
       mc:Ignorable="d" 
       d:DesignHeight="305" d:DesignWidth="750"
       Title="TransactionMain">
-    <Grid Height="305" Width="750" VerticalAlignment="Top" Background="#F8D5D8D5">
-        <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="0,61,88,23" Grid.ColumnSpan="3">
+    <Grid Height="305" Width="750" VerticalAlignment="Top" Background="#ECECEA">
+        <DataGrid Name="TransactionTableXAML" AutoGenerateColumns="False" Margin="0,31,118,23">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="Background" Value="LightSalmon"/>
-                    <Setter Property="FontWeight" Value="Regular"/>
-                    <Setter Property="BorderThickness" Value="0,0,1,2"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="SeparatorBrush" Value="DarkRed" />
+                    <Setter Property="FontWeight" Value="DemiBold" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                <Grid>
+                                    <Border x:Name="columnHeaderBorder"
+		                                BorderThickness="1"
+		                                Padding="3,0,3,0">
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Offset="0" Color="#A5A5A5" /> 
+                                                <GradientStop Offset="1" Color="#4B4B4B" /> 
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Offset="0" Color="#8b9dc3" />
+                                                <GradientStop Offset="1" Color="#dfe3ee" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+			     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+				SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header=" Date of Transaction" Width="130" Binding="{Binding transactionDate}"/>
-                <DataGridTextColumn Header=" Description" Width="180" Binding="{Binding transactionDescription}"/>
-                <DataGridComboBoxColumn Header=" Category"  x:Name="CategoryColumn" Width="120" ItemsSource="{Binding categoryName}" DisplayMemberPath="Category">
-                    <DataGridComboBoxColumn.ElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=categoryName}" />
-                        </Style>
-                    </DataGridComboBoxColumn.ElementStyle>
-                    <DataGridComboBoxColumn.EditingElementStyle>
-                        <Style TargetType="{x:Type ComboBox}">
-                            <Setter Property="ItemsSource" Value="{Binding Path=categoryName}" />
-                        </Style>
-                    </DataGridComboBoxColumn.EditingElementStyle>
-                </DataGridComboBoxColumn>
-                <DataGridTextColumn Header=" Amount(HUF)" Width="130" Binding="{Binding transactionPrice}"/>
-                <DataGridTextColumn Header=" Date of Import" Width="100" Binding="{Binding writeDate}"/>
+                <DataGridTextColumn Header=" Date of Transaction" Width="150" Binding="{Binding transactionDate}"/>
+                <DataGridTextColumn Header=" Description" Width="200" Binding="{Binding transactionDescription}"/>
+                <DataGridTextColumn Header=" Amount(HUF)" Width="150" Binding="{Binding transactionPrice}"/>
+                <DataGridTextColumn Header=" Date of Import" Width="130" Binding="{Binding writeDate}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Month1" HorizontalAlignment="Left" Margin="169,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
-        <Button Content="Month2" HorizontalAlignment="Left" Margin="244,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White" RenderTransformOrigin="1.72,0.55"/>
-        <Button Content="Month3" HorizontalAlignment="Left" Margin="319,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
-        <Button Content="Month4" HorizontalAlignment="Left" Margin="394,26,0,0" VerticalAlignment="Top" Width="75" Background="#FF2CC4DC" Foreground="White"/>
     </Grid>
 </Page>

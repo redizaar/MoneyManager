@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using _Excel = Microsoft.Office.Interop.Excel;
 using System.Windows;
+using System.IO;
 
 namespace WpfApp1
 {
@@ -15,18 +16,18 @@ namespace WpfApp1
         Worksheet WriteWorksheet;
         _Application excel = new _Excel.Application();
         private MainWindow mainWindow;
-
+        private string importerAccountNumber;
         public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
                                                     //BUT FIRST - check if the transaction is already exported or not 
             List<Transaction> neededTransactions = newTransactions(transactions);
-
+            SavedTransactions.addToSavedTransactions(neededTransactions);//adding the freshyl imported transactions to the saved 
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
             if (neededTransactions != null)
             {
-                string todaysDate = DateTime.Now.ToString("yyyy-MM-dd"); ;
+                string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
                 int row_number = 1;
                 while (WriteWorksheet.Cells[row_number, 1].Value != null)
                 {
@@ -60,15 +61,18 @@ namespace WpfApp1
                 }
                 try
                 {
-                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                                        false, false, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
-                                         Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                    excel.DisplayAlerts = false;
+                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault,
+                        Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges,
+                        Type.Missing, Type.Missing);
+                    ImportMainPage.getInstance(mainWindow).getUserStatistics(importerAccountNumber);
                 }
                 catch(Exception e)
                 {
 
                 }
-                WriteWorkbook.Close();
+                excel.Application.Quit();
+                excel.Quit();
             }
             else
             {
@@ -79,7 +83,8 @@ namespace WpfApp1
         {
             List<Transaction> savedTransactions = SavedTransactions.getSavedTransactions();
             List<Transaction> neededTransactions=new List<Transaction>();
-            string accountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
+            importerAccountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
+            mainWindow.setAccountNumber(importerAccountNumber);
             if (savedTransactions.Count != 0)//if the export file is not empty we scan it
             {
                 List<Transaction> tempTransactions = new List<Transaction>();
@@ -87,13 +92,15 @@ namespace WpfApp1
                 {
                    //egy külön listába tesszük azokat az elemeket a már elmentet tranzakciókból ahol a bankszámlaszám
                    //megegyezik az importálandó bankszámlaszámmal
-                   if(saved.getAccountNumber().Equals(accountNumber))
+                   if(saved.getAccountNumber().Equals(importerAccountNumber))
                     {
                         tempTransactions.Add(saved);
                     }
                 }
                 if (tempTransactions.Count != 0)//ha van olyan már elmentett tranzakció aminek az  a bankszámlaszáma mint amit importálni akarunk
                 {
+                    int explicitImported=0;
+                    //StreamWriter logFile =new System.IO.StreamWriter("C:\\Users\\Tocki\\Desktop\\transactionsLog.txt", append:true);
                     foreach (var imported in importedTransactions)
                     {
                         bool redundant = false;
@@ -104,6 +111,21 @@ namespace WpfApp1
                                     saved.getBalance_rn() == imported.getBalance_rn())
                             {
                                 redundant = true;
+                                if (ImportMainPage.getInstance(mainWindow).alwaysAsk.Equals(true))
+                                {
+                                    if (MessageBox.Show("This transaction is most likely to be in your Databse already\n Transaction date: " + imported.getTransactionDate() + "\nTransaction price: " + imported.getTransactionPrice()
+                                        + "\nPossibly imported on: " + saved.getWriteDate().Substring(0,12)+"\nWould you like to import it?",
+                                     "Redundant Transactions",
+                                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                    {
+                                        neededTransactions.Add(imported);
+                                        explicitImported++;
+                                        //logFile.WriteLine("AccountNumber: " + imported.getAccountNumber() +
+                                         //   "\n ImportDate: " + imported.getTransactionDate() +
+                                          //  "\n TransactionPrice: " 
+                                          //  + imported.getTransactionPrice()+"\n*");
+                                    }
+                                }
                                 break;
                             }
                         }
@@ -114,7 +136,7 @@ namespace WpfApp1
                     }
                     if(neededTransactions.Count==0)
                     {
-                        mainWindow.setTableAttribues(savedTransactions, accountNumber);
+                        mainWindow.setTableAttribues(savedTransactions, importerAccountNumber);
                         //only pass the saved transactions because we didn't add new
                         //and the accountNumber so we can select it by user
                     }
@@ -135,7 +157,7 @@ namespace WpfApp1
                         mainWindow.setTableAttribues(savedAndImported,true);
                     }
                     if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transaction(s)!\n" +
-                        "("+tempTransactions.Count+" was already imported)", "OK",
+                        "("+(tempTransactions.Count-explicitImported)+" was already imported)", "OK",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                     {
                         return neededTransactions;
@@ -163,6 +185,14 @@ namespace WpfApp1
                 }
                 return importedTransactions;
             }
+        }
+        public string geImporterAccountNumber()
+        {
+            return importerAccountNumber;
+        }
+        public void setimporterAccountNumber(string value)
+        {
+            importerAccountNumber = value;
         }
         ~ExportTransactions()
         {
