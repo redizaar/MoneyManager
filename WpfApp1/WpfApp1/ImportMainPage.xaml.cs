@@ -113,6 +113,10 @@ namespace WpfApp1
                     }
                 }
             }
+            if (lastImportDate == null)
+            {
+                lastImportDate= DateTime.Now.ToString("yyyy-MM-dd");
+            }
             if (lastImportDate.Length > 12)
             {
                 lastImportDateLabel.Content = lastImportDate.Substring(0, 12);
