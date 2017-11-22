@@ -55,6 +55,8 @@ namespace WpfApp1
                 savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber,description));
                 i++;
             }
+            excel.Workbooks.Close();
+            excel.Quit();
         }
         public static List<Transaction> getSavedTransactions()
         {
