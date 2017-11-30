@@ -108,6 +108,10 @@ namespace WpfApp1
                 }
                 i++;
             }
+            if (this.accountNumber.Equals(""))
+            {
+                accountNumber = TransactionSheet.Name;
+            }
             setStartingRow(transactionsStartRow);
             setNofColumns(maxColumns-blank_cells);
         }
@@ -180,8 +184,15 @@ namespace WpfApp1
             }
             if (descrColumns.Count != 0)
             {
+                ImportMainPage.getInstance(mainWindow).descriptionComboBox.Visibility = System.Windows.Visibility.Visible;
                 if (descrColumns.Count == 2)
                 {
+                    for (int i = 0; i < descrColumnNames.Count; i++)
+                    {
+                        ImportMainPage.getInstance(mainWindow).descriptionComboBox.Items.Add(descrColumnNames[i]);
+                    }
+
+
                     MessageBoxResult result = MessageBox.Show("Change " + descrColumnNames[0] + " description column from deafult?", descrColumnNames[0] + " or " + descrColumnNames[1],
                         MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
@@ -207,13 +218,6 @@ namespace WpfApp1
 
         private void readOutTransactions(int row, int maxColumn,int dateColumn, int singlepriceColumn, int balaceColumn,int descriptionColumn)
         {
-            Console.WriteLine("Tranzakciok sora: " + row);
-            Console.WriteLine("Oszlopok szama: " + maxColumn);
-            Console.WriteLine("Felhasznalo bankszamlaszama: " + accountNumber);
-            Console.WriteLine("## Tranzakcio oszlopszamai ##");
-            Console.WriteLine("Tranzakcio datuma: " + dateColumn);
-            Console.WriteLine("Tranzakcio osszege: " + singlepriceColumn);
-            Console.WriteLine("Tranazakcio leirasa: " + descriptionColumn);
             if(row==1)
             {
                 row++;
@@ -296,17 +300,7 @@ namespace WpfApp1
                             {
 
                             }
-                            if (this.getIsFirstTransaction())//we pretend that the balance is 0
-                            {
-                                transaction.Add(new Transaction(transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
-                                this.setPastTransactionPrice(transactionPrice);
-                                this.setIsFirstTransaction(false);
-                            }
-                            else
-                            {
-                                transaction.Add(new Transaction(this.getPastTransactionPrice() + transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
-                                this.setPastTransactionPrice(this.getPastTransactionPrice() + transactionPrice);
-                            }
+                            transaction.Add(new Transaction("-", transactionDate, transactionPrice, transactionDescription, accountNumber));
                         }
                         else
                         {
@@ -474,34 +468,7 @@ namespace WpfApp1
                                 {
                                     transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
                                 }
-                                if (this.getIsFirstTransaction())//we pretend that the balance is 0
-                                {
-                                    if (incomePrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(incomePrice);
-                                        this.setIsFirstTransaction(false);
-                                    }
-                                    else if (costPrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(costPrice);
-                                        this.setIsFirstTransaction(false);
-                                    }
-                                }
-                                else
-                                {
-                                    if (incomePrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + incomePrice);
-                                    }
-                                    else if (costPrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + costPrice);
-                                    }
-                                }
+                                transaction.Add(new Transaction("-", transactionDate, incomePrice, transactionDescription, accountNumber));
                             }
                             else
                             {

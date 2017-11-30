@@ -210,7 +210,6 @@
                 Foreground="Black" Style="{StaticResource FileBrowser}" FontFamily="Maiandra GD" FontSize="15" Command="{Binding Path=OpenFilePushed}">
         </Button>
         <ComboBox x:Name="descriptionComboBox" Height="30" Width="126" Margin="65,194,530,81">
-            <ComboBoxItem Name="Item1">Leírás</ComboBoxItem>
         </ComboBox>
         <Label Content="On repeating transactions : " HorizontalAlignment="Left" Margin="237,131,0,0" VerticalAlignment="Top" FontSize="15" FontWeight="Medium"/>
         <CheckBox x:Name="alwaysAskCB" Content="Always ask" HorizontalAlignment="Left" Margin="440,140,0,0" VerticalAlignment="Top" IsChecked="{Binding alwaysAsk, Mode=OneWayToSource}"/>
