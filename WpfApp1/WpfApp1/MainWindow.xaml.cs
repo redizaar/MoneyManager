@@ -135,17 +135,17 @@ namespace WpfApp1
                 mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
             }
            else if(buttonContent.Equals("Database"))
-            {
+           {
                 mainWindow.MainFrame.Content=TransactionMain.getInstance(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
                 mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Hidden;
                 mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
                 mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
-            }
+           }
            else if(buttonContent.Equals("Exit"))
-            {
+           {
                 mainWindow.Close();
-            }
+           }
         }
     }
 }
