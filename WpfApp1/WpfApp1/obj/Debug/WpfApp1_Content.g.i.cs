@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("keyicon.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("loginpanelbackground.jpg")]
 
 
