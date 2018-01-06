@@ -58,6 +58,9 @@
     <Compile Include="ImportMainPage.xaml.cs">
       <DependentUpon>ImportMainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Login_Page.xaml.cs">
+      <DependentUpon>Login_Page.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReadInFHB.cs" />
     <Compile Include="ReadInKandH.cs" />
     <Compile Include="ReadInOTP.cs" />
@@ -70,6 +73,10 @@
     </Compile>
     <Compile Include="User.cs" />
     <Page Include="ImportMainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Login_Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,6 +171,27 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="alarmIcon3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MoneyIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="loginIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="keyIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="idIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="userIcon2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="userIcon3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="stockBackground.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
