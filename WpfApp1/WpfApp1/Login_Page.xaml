@@ -7,29 +7,44 @@
       mc:Ignorable="d" 
       d:DesignHeight="368" d:DesignWidth="880"
       Title="Login">
+    <Page.Resources>
+        <LinearGradientBrush x:Key="UpperPartBackground" EndPoint="0.504,1.5" StartPoint="0.504,0.03">
+            <GradientStop Color="#34495E" Offset="0"/>
+            <GradientStop Color="#95A5A6" Offset="0.567"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="LowerPartBackground" EndPoint="0.504,1.5" StartPoint="0.504,0.03">
+            <GradientStop Color="#95A5A6" Offset="0"/>
+            <GradientStop Color="#D2D7D3" Offset="0.567"/>
+        </LinearGradientBrush>
+    </Page.Resources>
     <Border>
-        <Grid Margin="0,-1,0,1">
+        <Grid>
             <Grid.Background>
-                <ImageBrush ImageSource="loginBackground.jpg"></ImageBrush>
+                <ImageBrush ImageSource="stockBackground.jpg"></ImageBrush>
             </Grid.Background>
-            <StackPanel Margin="0,5,0,0">
-                <Border Height="250" Width="400" CornerRadius="50,50,0,0" Background="#ABB7B7" Margin="0,0,0,0">
-                <StackPanel>
-                    <Image Source="LoginIcon.png" Height="70" Width="100" Margin="0,15,0,0"></Image>
-                    <DockPanel Margin="0,30,0,0">
-                        <Image Source="idIcon.png" Height="30" Margin="60,10,0,0" HorizontalAlignment="Left"></Image>
-                        <TextBlock VerticalAlignment="Center" FontSize="15" Margin="20,0,0,0"> Username</TextBlock>
-                    </DockPanel>
-                    <DockPanel>
-                        <Image Source="keyIcon.png" Height="30" Margin="60,10,0,0" HorizontalAlignment="Left"/>
-                            <PasswordBox Background="#ABB7B7" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Margin="20,0,0,0"></PasswordBox>
-                    </DockPanel>
-                    <Button Content="Login" Height="30" Width="120" Margin="0,10,0,0" Background="#EB974E" FontSize="17"></Button>
-                </StackPanel>
-            </Border>
-                <Border Height="100" Width="400" CornerRadius="0,0,30,30" Background="#ABB7B7" Margin="0,5,0,0">
-                    <Button Content="Register" BorderThickness="0" Height="60" FontSize="17" Background="#ABB7B7"></Button>
-             </Border>
+            <StackPanel Margin="0,15,0,0">
+                <Border Height="250" Width="400" CornerRadius="50,50,0,0" Background="{StaticResource UpperPartBackground}" Margin="0,0,0,0" Opacity="0.9">
+                    <StackPanel VerticalAlignment="Center">
+                        <Label  Content="Financial History Importer" FontFamily="Bookman Old Style" FontSize="18" HorizontalAlignment="Center" Margin="0,5,0,0" Foreground="#87D37C"/>
+                        <Image Source="userIcon3.png" Height="70" Width="100" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        <DockPanel>
+                            <Image Source="idIcon.png" Height="30" Margin="60,5,0,0" HorizontalAlignment="Left"/>
+                            <Border BorderThickness="0,0,0,3" BorderBrush="#4183D7" Width="250">
+                                <TextBox Height="30"  FontSize="15" Margin="10,5,0,0" BorderThickness="0,0,0,3" BorderBrush="CadetBlue" Opacity="0"/>
+                            </Border>
+                        </DockPanel>
+                        <DockPanel>
+                            <Image Source="keyIcon.png" Height="30" Margin="63,7,0,0" HorizontalAlignment="Left"/>
+                            <Border BorderThickness="0,0,0,3" BorderBrush="#4183D7" Width="250" >
+                                <PasswordBox Height="30" Background="#ABB7B7" FontSize="15" Margin="5,0,0,0" BorderThickness="0,0,0,3" BorderBrush="CadetBlue" Opacity="0"/>
+                            </Border>
+                        </DockPanel>
+                        <Button Content="Login" Height="30" Width="120" Margin="0,15,0,0" Background="#EB974E" FontSize="17" FontFamily="Times New Roman"/>
+                    </StackPanel>
+                </Border>
+                <Border Height="60" Width="400" CornerRadius="0,0,30,30"  Margin="0,15,0,0" Background="#D2D7D3" Opacity="0.8">
+                    <Button  Margin="0,-30,0,0" Content="Register" BorderThickness="0" Height="50" FontSize="17" FontFamily="Times New Roman"  Background="{StaticResource LowerPartBackground}"></Button>
+                </Border>
             </StackPanel>
         </Grid>
     </Border>
