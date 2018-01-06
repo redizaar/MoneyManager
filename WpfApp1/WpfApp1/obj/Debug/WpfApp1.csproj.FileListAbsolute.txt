@@ -18,3 +18,5 @@ C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\TransactionMain.g.cs
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\TransactionMain.baml
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\ImportMainPage.g.cs
 C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\ImportMainPage.baml
+C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\Login_Page.g.cs
+C:\Users\Tocki\source\repos\WpfApp1\WpfApp1\obj\Debug\Login_Page.baml

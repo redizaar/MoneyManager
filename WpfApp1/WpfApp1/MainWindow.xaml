@@ -7,8 +7,7 @@
         mc:Ignorable="d"
         Title="Money Manager" Height="368" Width="880" Icon="MoneyIcon.png">
     <Grid Height="337" VerticalAlignment="Top" Background="#ECECEA">
-        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
-        </Frame>
+        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0"/>
         <DockPanel Margin="0,70,730,0" Background="#ECECEA">
             <Border Margin="0,0,730,0">
                 <Canvas Margin="0,0,570,0">
@@ -88,11 +87,11 @@
         <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="639" Background="#74AFAD">
             <StackPanel>
                 <DockPanel Margin="0,0,0,0">
-                <Canvas>
-                    <Image Source="attachIcon2.png" Width="70" Margin="10,5,635,0" Height="55"/>
-                    <Label Content="Import your Financial History" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
-                </Canvas>
-            </DockPanel>
+                    <Canvas>
+                        <Image Source="attachIcon2.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                        <Label Content="Import your Financial History" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                    </Canvas>
+                </DockPanel>
                 <StackPanel Margin="85,30,0,0">
                     <Label Foreground="Black" FontSize="13" Content="In this Menu you Import your Financial History datas"></Label>
                 </StackPanel>
@@ -120,6 +119,6 @@
         </Border>
         <Image x:Name="exclamImage" Source="exclamIcon.png" Height="20" Margin="842,0,10,317" Width="20" RenderTransformOrigin="0.1,0.4"/>
         <Label x:Name="currentUserLabel" Content="User" Margin="800,40,0,267" FontWeight="Bold"/>
-        <!--LightSalmon,LightSkyBlue-->
+        <Frame x:Name="LoginFrame" HorizontalAlignment="Left" Height="337" VerticalAlignment="Top" Width="872"/>
     </Grid>
 </Window>

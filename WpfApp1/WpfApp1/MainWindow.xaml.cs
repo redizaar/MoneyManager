@@ -20,11 +20,11 @@ namespace WpfApp1
         {
             DataContext = this;
             InitializeComponent();
+            LoginFrame.Content = new Login_Page();
             tableMenuTop.Visibility = System.Windows.Visibility.Hidden; //importmenu is default
             startUpReadIn();
             currentUser.setUsername("Patrik01");
             currentUser.setAccountNumber("11773470-00817789");
-
             currentUserLabel.Content = currentUser.getUsername(); //notification label
         }
 
