@@ -64,6 +64,9 @@
     <Compile Include="ReadInFHB.cs" />
     <Compile Include="ReadInKandH.cs" />
     <Compile Include="ReadInOTP.cs" />
+    <Compile Include="Register_Page.xaml.cs">
+      <DependentUpon>Register_Page.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SavedTransactions.cs" />
     <Compile Include="TemplateReadIn.cs" />
     <Compile Include="Transaction.cs" />
@@ -93,6 +96,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Register_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TransactionMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

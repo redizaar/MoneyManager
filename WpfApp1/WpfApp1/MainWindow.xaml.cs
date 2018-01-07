@@ -20,7 +20,7 @@ namespace WpfApp1
         {
             DataContext = this;
             InitializeComponent();
-            LoginFrame.Content = new Login_Page();
+            LoginFrame.Content = new Login_Page(this);
             tableMenuTop.Visibility = System.Windows.Visibility.Hidden; //importmenu is default
             startUpReadIn();
             currentUser.setUsername("Patrik01");

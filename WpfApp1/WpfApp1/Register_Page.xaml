@@ -1,4 +1,4 @@
-﻿<Page x:Class="WpfApp1.Login_Page"
+﻿<Page x:Class="WpfApp1.Register_Page"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -80,23 +80,27 @@
             <StackPanel Margin="0,5,0,0">
                 <Border Height="250" Width="400" CornerRadius="50,50,0,0" Background="{StaticResource UpperPartBackground}" Margin="0,0,0,0" Opacity="0.9">
                     <StackPanel VerticalAlignment="Center">
-                        <Label  Content="Financial History Importer" FontFamily="Algerian" FontSize="20" HorizontalAlignment="Center" Margin="0,5,0,0" Foreground="#87D37C"/>
-                        <Image Source="userIcon3.png" Height="70" Width="100" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                        <Label  Content="Registration" FontFamily="Algerian" FontSize="20" HorizontalAlignment="Center" Margin="0,5,0,0" Foreground="#87D37C"/>
+                        <Image Source="userIcon3.png" Height="70" Width="100" HorizontalAlignment="Center"/>
                         <DockPanel>
                             <Image Source="idIcon.png" Height="30" Margin="60,5,0,0" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="usernameTextbox" Height="30"  FontSize="15" Margin="15,5,0,0" Background="Transparent" BorderThickness="0"/>
+                            <TextBox x:Name="registerUsernameTextbox" Height="30"  FontSize="15" Margin="15,5,0,0" Background="Transparent" BorderThickness="0"/>
                         </DockPanel>
-                        <Border BorderThickness="0,3,0,0" BorderBrush="#22A7F0" Width="250" Margin="60,-7,0,0"></Border>
+                        <Border BorderThickness="0,3,0,0" BorderBrush="#FABE58" Width="250" Margin="60,-7,0,0"></Border>
                         <DockPanel>
                             <Image Source="keyIcon.png" Height="30" Margin="63,7,0,0" HorizontalAlignment="Left"/>
-                            <PasswordBox x:Name="passwordTextbox" Height="30" FontSize="15"  Margin="18,5,0,0" Background="Transparent" BorderThickness="0"/>
+                            <PasswordBox x:Name="registerPasswordTextbox" Height="30" FontSize="15"  Margin="18,5,0,0" Background="Transparent" BorderThickness="0"/>
                         </DockPanel>
-                        <Border BorderThickness="0,3,0,0" BorderBrush="#22A7F0" Width="250" Margin="60,-7,0,0"></Border>
-                        <Button Content="Login" Height="30" Width="120" Margin="0,15,0,0" Background="#EB974E" FontSize="22" FontFamily="Times New Roman" Click="Button_Click"/>
+                        <Border BorderThickness="0,3,0,0" BorderBrush="#FABE58" Width="250" Margin="60,-7,0,0"></Border>
+                        <DockPanel>
+                            <Image Source="keyIcon.png" Height="30" Margin="63,7,0,0" HorizontalAlignment="Left"/>
+                            <PasswordBox x:Name="RegisterPasswordAgainTextbox" Height="30" FontSize="15"  Margin="18,5,0,0" Background="Transparent" BorderThickness="0"/>
+                        </DockPanel>
+                        <Border BorderThickness="0,3,0,0" BorderBrush="#FABE58" Width="250" Margin="60,-7,0,0"></Border>
                     </StackPanel>
                 </Border>
                 <Button  Margin="0,10,0,0" BorderThickness="0" Height="80"  Width="395" Style="{DynamicResource RoundCorner}" Opacity="0.75" Click="Button_Click_1">
-                    <Label Content="Register" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22" FontFamily="Times New Roman"></Label>
+                    <Label Content="Create account" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22" FontFamily="Times New Roman"></Label>
                 </Button>
             </StackPanel>
         </Grid>
