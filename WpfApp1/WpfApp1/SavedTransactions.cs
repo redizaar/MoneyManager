@@ -8,7 +8,7 @@ using _Excel = Microsoft.Office.Interop.Excel;
 
 namespace WpfApp1
 {
-    class SavedTransactions
+    public class SavedTransactions
     {
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;

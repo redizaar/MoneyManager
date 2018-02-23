@@ -22,22 +22,36 @@ namespace WpfApp1
     /// </summary>
     public partial class Login_Page : Page
     {
-        public Login_Page()
+        MainWindow mainWindow;
+        public Login_Page(MainWindow mainWindow)
         {
+            this.mainWindow = mainWindow;
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection sqlConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LoginDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            string loginQuery = "Select * from dbo Where username = '"+usernameTextbox.Text.ToString()+"' and password = '"+passwordTextbox.Password.ToString()+"'";
+            string loginQuery = "Select * From [Table] where username = '"+usernameTextbox.Text.ToString()+"' and password = '"+passwordTextbox.Password.ToString()+"'";
             SqlDataAdapter sda = new SqlDataAdapter(loginQuery,sqlConn);
             DataTable dtb = new DataTable();
             sda.Fill(dtb);
             if(dtb.Rows.Count==1)
             {
-                this.Visibility = System.Windows.Visibility.Hidden;
+                User currentUser = new User();
+                currentUser.setUsername(usernameTextbox.Text.ToString());
+                currentUser.setAccountNumber("11773470-00817789");//todo
+                mainWindow.currentUserLabel.Content = currentUser.getUsername(); //notification label
+                //todo account-number
+                //it's overwriten automatically in MainWindows constructor
+                mainWindow.setCurrentUser(currentUser);
+                Visibility = System.Windows.Visibility.Hidden;
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            mainWindow.LoginFrame.Content = new Register_Page(mainWindow);
         }
     }
 }

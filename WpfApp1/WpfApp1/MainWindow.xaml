@@ -60,6 +60,18 @@
                                 </Button.Template>
                             </Button>
                         </DockPanel>
+                        <DockPanel Margin="0,0,0,0" x:Name="stockChartDock">
+                            <Button Height="50" Width="150" x:Name="StockChartButton" Content="stockMarketData" Command="{Binding Path=PortfolioPushed}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="chartIcon.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Portfolio" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
                         <DockPanel Margin="0,0,0,0">
                             <Button Height="50" Width="150" x:Name="ExitButton" Content="Exit" Command="{Binding Path=ExitPushed}">
                                 <Button.Template>
@@ -93,7 +105,7 @@
                     </Canvas>
                 </DockPanel>
                 <StackPanel Margin="85,30,0,0">
-                    <Label Foreground="Black" FontSize="13" Content="In this Menu you Import your Financial History datas"></Label>
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you Import your Financial History datas."></Label>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -106,7 +118,20 @@
                     </Canvas>
                 </DockPanel>
                 <StackPanel Margin="85,30,0,0">
-                    <Label Foreground="Black" FontSize="13" Content="In this Menu you can see your Financial History Table from Database"></Label>
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you can see your Financial History Table from Database."></Label>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="portfolioMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="639" Background="#74AFAD">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,0">
+                    <Canvas>
+                        <Image Source="chartIcon.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                        <Label Content="Share Pices" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                    </Canvas>
+                </DockPanel>
+                <StackPanel Margin="85,30,0,0">
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you can see different share prices updated from Google Finance."></Label>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -119,6 +144,6 @@
         </Border>
         <Image x:Name="exclamImage" Source="exclamIcon.png" Height="20" Margin="842,0,10,317" Width="20" RenderTransformOrigin="0.1,0.4"/>
         <Label x:Name="currentUserLabel" Content="User" Margin="800,40,0,267" FontWeight="Bold"/>
-        <Frame x:Name="LoginFrame" HorizontalAlignment="Left" Height="337" VerticalAlignment="Top" Width="872"/>
+        <Frame x:Name="LoginFrame" HorizontalAlignment="Left" Height="337" VerticalAlignment="Top" Width="880" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

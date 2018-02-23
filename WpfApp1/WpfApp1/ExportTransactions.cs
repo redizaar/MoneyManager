@@ -17,9 +17,10 @@ namespace WpfApp1
         _Application excel = new _Excel.Application();
         private MainWindow mainWindow;
         private string importerAccountNumber;
-        public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow)
+        public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow,string currentFileName)
         {
             this.mainWindow = mainWindow;
+            MessageBox.Show("Exporting data from: " + currentFileName, "", MessageBoxButton.OK);
                                                     //BUT FIRST - check if the transaction is already exported or not 
             List<Transaction> neededTransactions = newTransactions(transactions);
             SavedTransactions.addToSavedTransactions(neededTransactions);//adding the freshyl imported transactions to the saved 
