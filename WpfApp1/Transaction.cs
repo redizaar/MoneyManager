@@ -14,11 +14,19 @@ namespace WpfApp1
         public int transactionPrice { get; set; }
         private string accountNumber;
         public string writeDate { get; set; }
-
+        private string noBalance;
 
         public Transaction(int balance_rn,string date,int price,string description, string accountNumber)
         {
             this.balance_rn = balance_rn;
+            this.transactionDate = date;
+            this.transactionPrice = price;
+            this.transactionDescription = description;
+            this.accountNumber = accountNumber;
+        }
+        public Transaction(string noBalance,string date, int price, string description, string accountNumber)
+        {
+            this.noBalance = noBalance;
             this.transactionDate = date;
             this.transactionPrice = price;
             this.transactionDescription = description;
@@ -33,6 +41,7 @@ namespace WpfApp1
             this.accountNumber = accountNumber;
             this.transactionDescription = transactionDescription;
         }
+
         public void setWriteDate(String todaysDate)
         {
             this.writeDate = todaysDate;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using _Excel = Microsoft.Office.Interop.Excel;
 using System.Windows;
+using System.IO;
 
 namespace WpfApp1
 {
@@ -16,13 +17,13 @@ namespace WpfApp1
         _Application excel = new _Excel.Application();
         private MainWindow mainWindow;
         private string importerAccountNumber;
-        public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow)
+        public ExportTransactions(List<Transaction> transactions,MainWindow mainWindow,string currentFileName)
         {
             this.mainWindow = mainWindow;
+            MessageBox.Show("Exporting data from: " + currentFileName, "", MessageBoxButton.OK);
                                                     //BUT FIRST - check if the transaction is already exported or not 
             List<Transaction> neededTransactions = newTransactions(transactions);
             SavedTransactions.addToSavedTransactions(neededTransactions);//adding the freshyl imported transactions to the saved 
-            ImportMainPage.getInstance(mainWindow).getUserStatistics(importerAccountNumber);
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
             if (neededTransactions != null)
@@ -61,17 +62,16 @@ namespace WpfApp1
                 }
                 try
                 {
-                    excel.DisplayAlerts = false;
-                    WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx", Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault,
-                        Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges,
-                        Type.Missing, Type.Missing);
+                    //WriteWorkbook.SaveAs(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
+                    excel.ActiveWorkbook.Save();
+                    excel.Workbooks.Close();
+                    excel.Quit();
                 }
                 catch(Exception e)
                 {
 
                 }
-                excel.Application.Quit();
-                excel.Quit();
+                ImportMainPage.getInstance(mainWindow).getUserStatistics(importerAccountNumber);
             }
             else
             {
@@ -98,6 +98,8 @@ namespace WpfApp1
                 }
                 if (tempTransactions.Count != 0)//ha van olyan már elmentett tranzakció aminek az  a bankszámlaszáma mint amit importálni akarunk
                 {
+                    int explicitImported=0;
+                    StreamWriter logFile =new System.IO.StreamWriter("C:\\Users\\Tocki\\Desktop\\transactionsLog.txt", append:true);
                     foreach (var imported in importedTransactions)
                     {
                         bool redundant = false;
@@ -108,6 +110,21 @@ namespace WpfApp1
                                     saved.getBalance_rn() == imported.getBalance_rn())
                             {
                                 redundant = true;
+                                if (ImportMainPage.getInstance(mainWindow).alwaysAsk.Equals(true))
+                                {
+                                    if (MessageBox.Show("This transaction is most likely to be in your Databse already!\n -- Transaction date: " + imported.getTransactionDate() + "\n-- Transaction price: " + imported.getTransactionPrice()
+                                        + "\n-- Imported on: " + saved.getWriteDate().Substring(0,12)+"\nWould you like to import it anyways?",
+                                     "Imprt alert!",
+                                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                    {
+                                        neededTransactions.Add(imported);
+                                        explicitImported++;
+                                        logFile.WriteLine("AccountNumber: " + imported.getAccountNumber() +
+                                            "\n ImportDate: " + imported.getTransactionDate() +
+                                            "\n TransactionPrice: " 
+                                            + imported.getTransactionPrice()+" *");
+                                    }
+                                }
                                 break;
                             }
                         }
@@ -116,6 +133,7 @@ namespace WpfApp1
                             neededTransactions.Add(imported);;
                         }
                     }
+                    logFile.Close();
                     if(neededTransactions.Count==0)
                     {
                         mainWindow.setTableAttribues(savedTransactions, importerAccountNumber);
@@ -139,7 +157,7 @@ namespace WpfApp1
                         mainWindow.setTableAttribues(savedAndImported,true);
                     }
                     if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transaction(s)!\n" +
-                        "("+tempTransactions.Count+" was already imported)", "OK",
+                        "("+(tempTransactions.Count-explicitImported)+" was already imported)", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                     {
                         return neededTransactions;
@@ -149,7 +167,7 @@ namespace WpfApp1
                 else //nincs olyan elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
                 {
                     mainWindow.setTableAttribues(importedTransactions,"empty");
-                    if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "OK",
+                    if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                     {
                         return importedTransactions;
@@ -160,7 +178,7 @@ namespace WpfApp1
             else // még nincs elmentett tranzakció
             {
                 mainWindow.setTableAttribues(importedTransactions,"empty");
-                if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "OK",
+                if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                 {
                     return importedTransactions;

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace WpfApp1
 {
@@ -20,19 +22,26 @@ namespace WpfApp1
         private int pastTransactionPrice;//in case of missing Balance column..
         private bool isFirstTransaction;//in case of missing Balance column..
         private string accountNumber;
+        private MainWindow mainWindow;
         private bool multipleColumn;
         private bool calculatedBalance;//in case of having a balance column , but it is null in some of the rows..........
 
-        public TemplateReadIn(ImportReadIn importReadin, Workbook workbook, Worksheet worksheet)
+        public TemplateReadIn(ImportReadIn importReadin, Workbook workbook, Worksheet worksheet,MainWindow mainWindow,bool userSpecified)
         {
+
             worksheet = workbook.Worksheets[1];
             this.bankHanlder = importReadin;
+            this.mainWindow = mainWindow;
             transactions = new List<Transaction>();
             this.TransactionSheet = worksheet;
-            this.multipleColumn = false;
-            this.isFirstTransaction = false;
-            this.calculatedBalance = false;
-            getTransactionRows();
+            //kiolvasás milyen banktól van
+            if (!userSpecified)
+            {
+                this.multipleColumn = false;
+                this.isFirstTransaction = false;
+                this.calculatedBalance = false;
+                getTransactionRows();
+            }
         }
         private void getTransactionRows()
         {
@@ -46,14 +55,14 @@ namespace WpfApp1
 
             int maxColumns=1;
             int transactionsStartRow = 1;
-            while (blank_row<4)
+            while (blank_row<5)
             {
                 int column = 1;
                 if(TransactionSheet.Cells[i,column].Value!=null)
                 {
                     if (this.accountNumber.Equals(""))
                     {
-                        if (column == 1)
+                        if ((column == 1) || (column==2 ))
                         {
                             string cellValue = TransactionSheet.Cells[i, column].Value.ToString();
                             if (accoutNumberRegex1.IsMatch(cellValue) || accountNumberRegex2.IsMatch(cellValue) || accoutNumberRegex3.IsMatch(cellValue))
@@ -104,6 +113,10 @@ namespace WpfApp1
                     }
                 }
                 i++;
+            }
+            if (this.accountNumber.Equals(""))
+            {
+                accountNumber = TransactionSheet.Name;
             }
             setStartingRow(transactionsStartRow);
             setNofColumns(maxColumns-blank_cells);
@@ -177,8 +190,15 @@ namespace WpfApp1
             }
             if (descrColumns.Count != 0)
             {
+                //ImportMainPage.getInstance(mainWindow).descriptionComboBox.Visibility = System.Windows.Visibility.Visible;
                 if (descrColumns.Count == 2)
                 {
+                    for (int i = 0; i < descrColumnNames.Count; i++)
+                    {
+                        ImportMainPage.getInstance(mainWindow).descriptionComboBox.Items.Add(descrColumnNames[i]);
+                    }
+
+
                     MessageBoxResult result = MessageBox.Show("Change " + descrColumnNames[0] + " description column from deafult?", descrColumnNames[0] + " or " + descrColumnNames[1],
                         MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
@@ -286,17 +306,7 @@ namespace WpfApp1
                             {
 
                             }
-                            if (this.getIsFirstTransaction())//we pretend that the balance is 0
-                            {
-                                transaction.Add(new Transaction(transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
-                                this.setPastTransactionPrice(transactionPrice);
-                                this.setIsFirstTransaction(false);
-                            }
-                            else
-                            {
-                                transaction.Add(new Transaction(this.getPastTransactionPrice() + transactionPrice, transactionDate, transactionPrice, transactionDescription, accountNumber));
-                                this.setPastTransactionPrice(this.getPastTransactionPrice() + transactionPrice);
-                            }
+                            transaction.Add(new Transaction("-", transactionDate, transactionPrice, transactionDescription, accountNumber));
                         }
                         else
                         {
@@ -464,34 +474,7 @@ namespace WpfApp1
                                 {
                                     transactionDescription = TransactionSheet.Cells[row, descriptionColumn].Value.ToString();
                                 }
-                                if (this.getIsFirstTransaction())//we pretend that the balance is 0
-                                {
-                                    if (incomePrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(incomePrice);
-                                        this.setIsFirstTransaction(false);
-                                    }
-                                    else if (costPrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(costPrice);
-                                        this.setIsFirstTransaction(false);
-                                    }
-                                }
-                                else
-                                {
-                                    if (incomePrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + incomePrice, transactionDate, incomePrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + incomePrice);
-                                    }
-                                    else if (costPrice != 0)
-                                    {
-                                        transaction.Add(new Transaction(this.getPastTransactionPrice() + costPrice, transactionDate, costPrice, transactionDescription, accountNumber));
-                                        this.setPastTransactionPrice(this.getPastTransactionPrice() + costPrice);
-                                    }
-                                }
+                                transaction.Add(new Transaction("-", transactionDate, incomePrice, transactionDescription, accountNumber));
                             }
                             else
                             {
@@ -508,7 +491,15 @@ namespace WpfApp1
                 }
             }
         }
-
+        /**
+         * 1. az utolsó balance cella értéke ami nem volt null
+         * 2. az aktuális sor ahol tartunk(ahol null a balance cella)
+         * 3.az utolsó sor ahol volt értéke a balance cellának
+         * 4.a terhelés cella
+         * 5.a jövedelem cella
+         * 
+         * return value : the right balance value
+         * */
         private int calculatePastBalance(int transactionBalance,int row,int tempRow,int costPriceColumn,int incomePriceColumn)
         {
             tempRow--;//we are currently at a cell where we have a balance value
@@ -663,7 +654,381 @@ namespace WpfApp1
             }
             return -1;
         }
-        
+        public void readOutUserspecifiedTransactions(string startingRow,string dateColumnString,string commentColumnString
+            ,string accounNumberCB,string transactionPriceCB,string balanceCB,string balanceColumnString)
+        {
+            //getting the account number fist
+            string accountNumber="";
+            int accountNumberColumn;
+            string accountNumberResult = SpecifiedImport.getInstance(null,mainWindow).accountNumberTextBox.Text.ToString();
+            if (accounNumberCB=="Column")
+            {
+                try
+                {
+                    //check if it is a number
+                    accountNumberColumn = int.Parse(accountNumberResult);
+                }
+                catch(Exception e)
+                {
+                    //it isn't a number its a letter like A,B,E,
+                    //so we convert it to a number
+                    accountNumberColumn = ExcelColumnNameToNumber(accountNumberResult);
+                }
+            }
+            else if(accounNumberCB=="Cell")
+            {
+                string firstChar= accountNumberResult.Substring(0,1);
+                try
+                {
+                    //check if it is a number
+                    accountNumberColumn = int.Parse(firstChar);
+                }
+                catch (Exception e)
+                {
+                    //it isn't a number its a letter like A,B,E,
+                    //so we convert it to a number
+                    accountNumberColumn = ExcelColumnNameToNumber(firstChar);
+                }
+                accountNumber = TransactionSheet.Cells[accountNumberResult.Substring(1),accountNumberColumn].Value.ToString();
+            }
+            else if(accounNumberCB=="Sheet name")
+            {
+                accountNumber = TransactionSheet.Name;
+            }
+
+            int balanceColumn=0;
+            if(balanceCB=="Column")
+            {
+                try
+                {
+                    //check if it is a number
+                    balanceColumn = int.Parse(balanceColumnString);
+                }
+                catch (Exception e)
+                {
+                    //it isn't a number its a letter like A,B,E,
+                    //so we convert it to a number
+                    balanceColumn = ExcelColumnNameToNumber(balanceColumnString);
+                }
+            }
+            else if(balanceCB=="None")
+            {
+                balanceColumn = -1;
+            }
+            int transactionDescriptionColumn=0;
+            List<string> commentColumnStrings;//C,B,E,G  1,3,5,2
+            commentColumnStrings = commentColumnString.Split(',').ToList();
+            List<int> transactionDescriptionColumns=new List<int>();
+            if (commentColumnStrings.Count > 1)//if it cannot be splitted it returns the whole string
+            {
+                for (int i = 0; i < commentColumnStrings.Count; i++)
+                {
+                    try
+                    {
+                        transactionDescriptionColumn = int.Parse(commentColumnStrings[i]);
+                    }
+                    catch (Exception e)
+                    {
+                        transactionDescriptionColumn = ExcelColumnNameToNumber(commentColumnStrings[i]);
+                    }
+                    transactionDescriptionColumns.Add(transactionDescriptionColumn);
+                }
+            }
+            else
+            {
+                try
+                {
+                    transactionDescriptionColumn = int.Parse(commentColumnString);
+                }
+                catch (Exception e)
+                {
+                    transactionDescriptionColumn = ExcelColumnNameToNumber(commentColumnString);
+                }
+            }
+            int dateColumn;
+            try
+            {
+                dateColumn = int.Parse(dateColumnString);
+            }
+            catch(Exception e)
+            {
+                dateColumn = ExcelColumnNameToNumber(dateColumnString);
+            }
+            int transactionRow = int.Parse(startingRow);
+            //we have the account number,desription column , date column , balance column(or we no there isn't)
+            //the price column(s) left
+            bool isOneColumn = true;
+            int priceColumn=0;
+            int incomeColumn=0;
+            int spendingColumn=0;
+            if (transactionPriceCB == "One column")
+            {
+                string priceColumnString = SpecifiedImport.getInstance(null,mainWindow).priceColumnTextBox_1.Text.ToString();
+                try
+                {
+                    priceColumn = int.Parse(priceColumnString);
+                }
+                catch (Exception e)
+                {
+                    priceColumn = ExcelColumnNameToNumber(priceColumnString);
+                }
+            }
+            else if (transactionPriceCB == "Income,Spending")
+            {
+                isOneColumn = false;
+                string incomeColumnString = SpecifiedImport.getInstance(null,mainWindow).priceColumnTextBox_1.Text.ToString();
+                try
+                {
+                    incomeColumn = int.Parse(incomeColumnString);
+                }
+                catch (Exception e)
+                {
+                    incomeColumn = ExcelColumnNameToNumber(incomeColumnString);
+                }
+                string spendingColumnString = SpecifiedImport.getInstance(null,mainWindow).priceColumnTextBox_2.Text.ToString();
+                try
+                {
+                    spendingColumn = int.Parse(spendingColumnString);
+                }
+                catch (Exception e)
+                {
+                    spendingColumn = ExcelColumnNameToNumber(spendingColumnString);
+                }
+            }
+            //we have every info
+            int blank_counter = 0;
+            while (blank_counter < 2)
+            {
+                if (TransactionSheet.Cells[transactionRow, dateColumn].Value != null)
+                {
+                    blank_counter = 0;
+                    string transactionDate = TransactionSheet.Cells[transactionRow, dateColumn].Value.ToString();
+                    string transactionDescription = "-";
+                    if (transactionDescriptionColumns.Count != 0)
+                    {
+                        for (int i = 0; i < transactionDescriptionColumns.Count; i++)
+                        {
+                            if (TransactionSheet.Cells[transactionRow, transactionDescriptionColumns[i]].Value != null)
+                            {
+                                if (i == 0)//transactionDescription initalization
+                                    transactionDescription = TransactionSheet.Cells[transactionRow, transactionDescriptionColumns[i]].Value.ToString()+", ";
+                                else if(i== transactionDescriptionColumns.Count-1)
+                                    transactionDescription += TransactionSheet.Cells[transactionRow, transactionDescriptionColumns[i]].Value.ToString();
+                                else
+                                    transactionDescription = TransactionSheet.Cells[transactionRow, transactionDescriptionColumns[i]].Value.ToString() + ", ";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (TransactionSheet.Cells[transactionRow, transactionDescriptionColumn].Value != null)
+                        {
+                            transactionDescription = TransactionSheet.Cells[transactionRow, transactionDescriptionColumn].Value.ToString();
+                        }
+                    }
+                    int transactionPrice = 0;
+                    if (balanceColumn != -1)
+                    {
+                        if (TransactionSheet.Cells[transactionRow, balanceColumn].Value != null)//check if the balance column has a value (fhb of course)
+                        {
+                            string balanceRnString = TransactionSheet.Cells[transactionRow, balanceColumn].Value.ToString();
+                            int balanceRn = int.Parse(balanceRnString);
+                            if (isOneColumn) // single column , have balance column
+                            {
+                                string transactionPriceString = TransactionSheet.Cells[transactionRow, priceColumn].Value.ToString();
+                                transactionPrice = int.Parse(transactionPriceString);
+                                transactions.Add(new Transaction(balanceRn, transactionDate, transactionPrice, transactionDescription, accountNumber));
+                            }
+                            else //multiple column , have balance column
+                            {
+                                if (TransactionSheet.Cells[transactionRow, incomeColumn].Value != null)
+                                {
+                                    string incomeString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                    int income = int.Parse(incomeString);
+                                    transactions.Add(new Transaction(balanceRn, transactionDate, income, transactionDescription, accountNumber));
+                                }
+                                else//it is a spending transaction
+                                {
+                                    string spendingString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                    int spending = int.Parse(spendingString) * (-1);
+                                    transactions.Add(new Transaction(balanceRn, transactionDate, spending, transactionDescription, accountNumber));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            int tempRow = transactionRow;
+                            while (TransactionSheet.Cells[tempRow, balanceColumn].Value == null)
+                            {
+                                tempRow++;
+                            }
+                            //az utolsó olyan sor ahol van értéke a balance cellának
+                            string lastKownBalanceString = TransactionSheet.Cells[tempRow, balanceColumn].Value.ToString();
+                            int lastKownBalance = int.Parse(lastKownBalanceString);
+                            int calcuatedBalance = calculatePastBalance(lastKownBalance, transactionRow, tempRow, spendingColumn, incomeColumn);
+                            if (TransactionSheet.Cells[transactionRow, incomeColumn].Value != null)
+                            {
+                                string incomeString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                int income = int.Parse(incomeString);
+                                transactions.Add(new Transaction(calcuatedBalance, transactionDate, income, transactionDescription, accountNumber));
+                            }
+                            else//it is a spending transaction
+                            {
+                                string spendingString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                int spending = int.Parse(spendingString) * (-1);
+                                transactions.Add(new Transaction(calcuatedBalance, transactionDate, spending, transactionDescription, accountNumber));
+                            }
+                        }
+                    }
+                    else//no balance column
+                    {
+                        string noBalance = "-";
+                        if (isOneColumn) // single price column , no balance column
+                        {
+                            string transactionPriceString = TransactionSheet.Cells[transactionRow, priceColumn].Value.ToString();
+                            transactionPrice = int.Parse(transactionPriceString);
+                            transactions.Add(new Transaction(noBalance, transactionDate, transactionPrice, transactionDescription, accountNumber));
+                        }
+                        else //multiple price column ,  doesnt have balance column
+                        {
+                            if (TransactionSheet.Cells[transactionRow, incomeColumn].Value != null)
+                            {
+                                string incomeString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                int income = int.Parse(incomeString);
+                                transactions.Add(new Transaction(noBalance, transactionDate, income, transactionDescription, accountNumber));
+                            }
+                            else//it is a spending transaction
+                            {
+                                string spendingString = TransactionSheet.Cells[transactionRow, incomeColumn].Value.ToString();
+                                int spending = int.Parse(spendingString) * (-1);
+                                transactions.Add(new Transaction(noBalance, transactionDate, spending, transactionDescription, accountNumber));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    blank_counter++;
+                }
+                transactionRow++;
+            }
+            if (transactions.Count > 0)
+            {
+                bankHanlder.addTransactions(transactions);
+                addImportFileDataToDB(int.Parse(startingRow),accountNumberResult, 
+                    dateColumnString,transactionPriceCB  ,balanceColumnString, commentColumnString);
+            }
+        }
+        private void addImportFileDataToDB(int startingRow,string accountNumberTextBox,
+            string dateColumnTextBox,string priceCheckBox,string balanceColumnTextBox,string commentColumnTextbox)
+        {
+            SqlConnection sqlConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ImportFileData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            sqlConn.Open();
+            string storedQuery="";
+            string firstColumn = ""; //price
+            string secondColumn = ""; //price
+            bool accountTextBoxSheetName = false;
+            bool isMultiplePriceColumns = false;
+            bool haveBalanceColumn = true;
+            if(SpecifiedImport.getInstance(null,mainWindow).accountNumberCB.SelectedItem.ToString()=="Sheet name")
+            {
+                accountTextBoxSheetName = true;
+                 storedQuery= "Select * From [StoredColumns] where TransStartRow = '" + startingRow + "'" +
+                " AND AccountNumberPos = '" + "Sheet name" + "'" +
+                " AND DateColumn = '" + dateColumnTextBox + "'";
+                firstColumn = SpecifiedImport.getInstance(null, mainWindow).priceColumnTextBox_1.Text.ToString();
+                if (priceCheckBox=="One column")
+                {
+                    storedQuery += " AND PriceColumn = '" + firstColumn + "'";
+                }
+                else if(priceCheckBox=="Income,Spending")
+                {
+                    isMultiplePriceColumns = true;
+                    secondColumn = SpecifiedImport.getInstance(null, mainWindow).priceColumnTextBox_2.Text.ToString();
+                    storedQuery += " AND PriceColumn = '" + firstColumn + "," + secondColumn + "'";
+                }
+                string balanceColumnCB=SpecifiedImport.getInstance(null, mainWindow).balanceColumnCB.SelectedItem.ToString();
+                if(balanceColumnCB=="Column")
+                {
+                    storedQuery += " AND BalanceColumn = '" + balanceColumnTextBox + "'";
+                }
+                else if(balanceColumnCB=="None")
+                {
+                    haveBalanceColumn = false;
+                    storedQuery += " AND BalanceColumn = '" + "None" + "'";
+                }
+
+                storedQuery += " AND CommentColumn = '" + commentColumnTextbox + "'";
+            }
+            else
+            {
+                storedQuery = "Select * From [StoredColumns] where TransStartRow = '" + startingRow + "'" +
+               " AND AccountNumberPos = '" + accountNumberTextBox + "'" +
+               " AND DateColumn = '" + dateColumnTextBox + "'";
+                firstColumn = SpecifiedImport.getInstance(null, mainWindow).priceColumnTextBox_1.Text.ToString();
+                if (priceCheckBox == "One column")
+                {
+                    storedQuery += " AND PriceColumn = '" + firstColumn + "'";
+                }
+                else if (priceCheckBox == "Income,Spending")
+                {
+                    isMultiplePriceColumns = true;
+                    secondColumn = SpecifiedImport.getInstance(null, mainWindow).priceColumnTextBox_2.Text.ToString();
+                    storedQuery += " AND PriceColumn = '" + firstColumn + "," + secondColumn + "'";
+                }
+                string balanceColumnCB = SpecifiedImport.getInstance(null, mainWindow).balanceColumnCB.SelectedItem.ToString();
+                if (balanceColumnCB == "Column")
+                {
+                    storedQuery += " AND BalanceColumn = '" + balanceColumnTextBox + "'";
+                }
+                else if (balanceColumnCB == "None")
+                {
+                    haveBalanceColumn = false;
+                    storedQuery += " AND BalanceColumn = '" + "None" + "'";
+                }
+
+                storedQuery += " AND CommentColumn = '" + commentColumnTextbox + "'";
+            }
+            SqlDataAdapter sda = new SqlDataAdapter(storedQuery, sqlConn);
+            System.Data.DataTable dtb = new System.Data.DataTable();
+            sda.Fill(dtb);
+            if (dtb.Rows.Count==0)
+            {
+                SqlCommand sqlCommand = new SqlCommand("insertNewColumns", sqlConn);//SQLQuery 5
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@transStartRow", startingRow);
+                if (accountTextBoxSheetName)
+                    sqlCommand.Parameters.AddWithValue("@accountNumberPos", "Sheet name");
+                else
+                    sqlCommand.Parameters.AddWithValue("@accountNumberPos", accountNumberTextBox);
+                sqlCommand.Parameters.AddWithValue("@dateColumn", dateColumnTextBox);
+                if (isMultiplePriceColumns)
+                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn);
+                else
+                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn+","+secondColumn);
+                if(haveBalanceColumn)
+                    sqlCommand.Parameters.AddWithValue("@balanceColumn", balanceColumnTextBox);
+                else
+                    sqlCommand.Parameters.AddWithValue("@balanceColumn", "None");
+                sqlCommand.Parameters.AddWithValue("@commentColumn", commentColumnTextbox);
+            }
+        }
+        public static int ExcelColumnNameToNumber(string columnName)
+        {
+            if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException("columnName");
+
+            columnName = columnName.ToUpperInvariant();
+
+            int sum = 0;
+
+            for (int i = 0; i < columnName.Length; i++)
+            {
+                sum *= 26;
+                sum += (columnName[i] - 'A' + 1);
+            }
+
+            return sum;
+        }
         private void setStartingRow(int value)
         {
             startingRow = value;

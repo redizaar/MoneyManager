@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Money Manager" Height="367.636" Width="880">
+        Title="Money Manager" Height="368" Width="880" Icon="MoneyIcon.png">
     <Grid Height="337" VerticalAlignment="Top" Background="#ECECEA">
-        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0">
-        </Frame>
+        <Frame x:Name="MainFrame" Margin="150,70,0,0" NavigationUIVisibility="Hidden" BorderBrush="Black" BorderThickness="0"/>
         <DockPanel Margin="0,70,730,0" Background="#ECECEA">
             <Border Margin="0,0,730,0">
                 <Canvas Margin="0,0,570,0">
@@ -20,7 +19,7 @@
                                         <EventTrigger.Actions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="-90,0,0,0" To="0,0,0,0" DecelerationRatio=".4" Duration="0:0:1"/>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="-90,0,0,0" To="0,0,0,0" DecelerationRatio=".4" Duration="0:0:0.5"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </EventTrigger.Actions>
@@ -29,7 +28,7 @@
                                         <EventTrigger.Actions>
                                             <BeginStoryboard>
                                                 <Storyboard>
-                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="-90,0,0,0" DecelerationRatio=".9" Duration="0:0:1"/>
+                                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" From="0,0,0,0" To="-90,0,0,0" DecelerationRatio=".9" Duration="0:0:0.5"/>
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </EventTrigger.Actions>
@@ -50,12 +49,24 @@
                             </Button>
                         </DockPanel>
                         <DockPanel Margin="0,0,0,0" x:Name="tableDock">
-                            <Button Height="50" Width="150" x:Name="TableButton" Content="Table" Command="{Binding Path=TablePushed}">
+                            <Button Height="50" Width="150" x:Name="TableButton" Content="Database" Command="{Binding Path=TablePushed}">
                                 <Button.Template>
                                     <ControlTemplate>
                                         <Canvas>
                                             <Image Source="tableIcon8.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
-                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Table" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Databse" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
+                                        </Canvas>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,0" x:Name="stockChartDock">
+                            <Button Height="50" Width="150" x:Name="StockChartButton" Content="stockMarketData" Command="{Binding Path=PortfolioPushed}">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Canvas>
+                                            <Image Source="chartIcon.png" Height="30" Canvas.Right="15" Canvas.Top="8"/>
+                                            <TextBlock Canvas.Left="20" Canvas.Top="13" Text="Portfolio" FontFamily="Bookman Old Style" FontSize="14" Foreground="white" Margin="0,5,0,0"/>
                                         </Canvas>
                                     </ControlTemplate>
                                 </Button.Template>
@@ -86,30 +97,53 @@
             </StackPanel>
         </Border>
         <Border x:Name="importMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="639" Background="#74AFAD">
-            <DockPanel Margin="0,0,0,0">
-                <Canvas>
-                    <Image Source="attachIcon2.png" Width="70" Margin="10,5,635,0" Height="55"/>
-                    <Label Content="Import menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
-                </Canvas>
-            </DockPanel>
+            <StackPanel>
+                <DockPanel Margin="0,0,0,0">
+                    <Canvas>
+                        <Image Source="attachIcon2.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                        <Label Content="Import your Financial History" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                    </Canvas>
+                </DockPanel>
+                <StackPanel Margin="85,30,0,0">
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you Import your Financial History datas."></Label>
+                </StackPanel>
+            </StackPanel>
         </Border>
         <Border x:Name="tableMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="639" Background="#74AFAD">
-            <DockPanel Margin="0,0,0,0">
-                <Canvas>
-                    <Image Source="tableIcon8.png" Width="70" Margin="10,5,635,0" Height="55"/>
-                    <Label Content="Table menu" Margin="80,20,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
-                </Canvas>
-            </DockPanel>
+            <StackPanel>
+                <DockPanel Margin="0,0,0,0">
+                    <Canvas>
+                        <Image Source="tableIcon8.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                        <Label Content="Transactions in Database" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                    </Canvas>
+                </DockPanel>
+                <StackPanel Margin="85,30,0,0">
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you can see your Financial History Table from Database."></Label>
+                </StackPanel>
+            </StackPanel>
         </Border>
-        <Border x:Name="userNotification" BorderBrush="Black" BorderThickness="1,0,0,1" HorizontalAlignment="Left" Height="70" Margin="785,0,0,0" VerticalAlignment="Top" Width="102" Background="#74AFAD">
+        <Border x:Name="portfolioMenuTop" BorderBrush="Black" BorderThickness="0,0,0,1" HorizontalAlignment="Left" Height="70" Margin="150,0,0,0" VerticalAlignment="Top" Width="639" Background="#74AFAD">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,0">
+                    <Canvas>
+                        <Image Source="chartIcon.png" Width="70" Margin="10,5,635,0" Height="55"/>
+                        <Label Content="Share Pices" Margin="80,8,0,0" FontSize="20" FontFamily="Arial" Foreground="White"/>
+                    </Canvas>
+                </DockPanel>
+                <StackPanel Margin="85,30,0,0">
+                    <Label Foreground="Black" FontSize="13" Content="In this Menu you can see different share prices updated from Google Finance."></Label>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="userNotification" BorderBrush="Black" BorderThickness="1,0,0,1" HorizontalAlignment="Left" Height="70" Margin="785,0,0,0" VerticalAlignment="Top" Width="87" Background="#74AFAD">
             <StackPanel Margin="-21,0,35,0">
                 <Canvas>
-                    <Image Source="exclamIcon.png" Height="20" Margin="75,0,0,0"/>
                     <Image Source="alarmIcon3.png" Width="70" Margin="30,5,0,0" Height="45"/>
                 </Canvas>
             </StackPanel>
         </Border>
+        <Image x:Name="exclamImage" Source="exclamIcon.png" Height="20" Margin="842,0,10,317" Width="20" RenderTransformOrigin="0.1,0.4"/>
         <Label x:Name="currentUserLabel" Content="User" Margin="800,40,0,267" FontWeight="Bold"/>
-        <!--LightSalmon,LightSkyBlue-->
+        <Frame x:Name="LoginFrame" HorizontalAlignment="Left" Height="337" VerticalAlignment="Top" Width="880" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

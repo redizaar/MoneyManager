@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,20 +15,22 @@ namespace WpfApp1
         private ButtonCommands btnCommand;
         private List<Transaction> tableAttributes=null;
         Boolean newImport = false;
-        public User currentUser=new User();
+        public User currentUser;
         private string accountNumber= "11773470-00817789";
+        public Stopwatch webStockStopwatch=new Stopwatch();
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
+            LoginFrame.Content = new Login_Page(this);
             tableMenuTop.Visibility = System.Windows.Visibility.Hidden; //importmenu is default
+            portfolioMenuTop.Visibility = System.Windows.Visibility.Hidden;
             startUpReadIn();
-            currentUser.setUsername("Patrik01");
-            currentUser.setAccountNumber("11773470-00817789");
-
-            currentUserLabel.Content = currentUser.getUsername(); //notification label
         }
-
+        public void setCurrentUser(User user)
+        {
+            currentUser = user;
+        }
         public void setTableAttribues(List<Transaction> impoertedTransactions,String accountNumber)
         {
             this.tableAttributes = impoertedTransactions;
@@ -74,6 +77,14 @@ namespace WpfApp1
                 return btnCommand;
             }
         }
+        public ButtonCommands PortfolioPushed
+        {
+            get
+            {
+                btnCommand = new ButtonCommands(StockChartButton.Content.ToString(), this);
+                return btnCommand;
+            }
+        }
         public ButtonCommands ExitPushed
         {
             get
@@ -91,11 +102,11 @@ namespace WpfApp1
         private void startUpReadIn()
         {
             //reading in the already saved transactions
-            new SavedTransactions();
+            SavedTransactions.getInstance();
         }
-        public void getTransactions(string bankName,string folderAddress)
+        public void getTransactions(string bankName,List<string> folderAddress)
         {
-            new ImportReadIn(bankName, folderAddress,this);
+            new ImportReadIn(bankName, folderAddress,this,false);
         }
     }
     public class ButtonCommands : ICommand
@@ -126,26 +137,53 @@ namespace WpfApp1
 
         public void Execute(object parameter)
         {
-           if(buttonContent.Equals("Import"))
+            mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
+            mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
+            mainWindow.stockChartDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
+            mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
+            mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Hidden;
+            mainWindow.portfolioMenuTop.Visibility = System.Windows.Visibility.Hidden;
+            if (buttonContent.Equals("Import"))
             {
                 mainWindow.MainFrame.Content = ImportMainPage.getInstance(mainWindow);
-                mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Hidden;
                 mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
-                mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
             }
-           else if(buttonContent.Equals("Table"))
-            {
+           else if(buttonContent.Equals("Database"))
+           {
                 mainWindow.MainFrame.Content=TransactionMain.getInstance(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
-                mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Hidden;
                 mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
-                mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(217, 133, 59));
+           }
+           else if(buttonContent.Equals("stockMarketData"))
+            {
+                if (mainWindow.webStockStopwatch.Elapsed == TimeSpan.FromMilliseconds(0))
+                {
+                    mainWindow.webStockStopwatch.Start();
+                    StockChart stockChart = new StockChart();
+                    //stockChart.getNewStockData();
+                    //stockChart.refreshChartAttributes();
+                    mainWindow.MainFrame.Content = stockChart;
+                    mainWindow.portfolioMenuTop.Visibility = System.Windows.Visibility.Visible;
+                    mainWindow.stockChartDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
+                }
+                else
+                {
+                    if (mainWindow.webStockStopwatch.Elapsed <= TimeSpan.FromMinutes(1.5))
+                    {
+                        MessageBox.Show("Please wait for " + (TimeSpan.FromMinutes(1.5) - mainWindow.webStockStopwatch.Elapsed) + " seconds!");
+                    }
+                    else
+                    {
+                        mainWindow.webStockStopwatch.Stop();
+                        mainWindow.webStockStopwatch.Reset();
+                    }
+                }
             }
            else if(buttonContent.Equals("Exit"))
-            {
+           {
                 mainWindow.Close();
-            }
+           }
         }
     }
 }

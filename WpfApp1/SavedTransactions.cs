@@ -8,16 +8,16 @@ using _Excel = Microsoft.Office.Interop.Excel;
 
 namespace WpfApp1
 {
-    class SavedTransactions
+    public class SavedTransactions
     {
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
         static List<Transaction> savedTransactions;
-        public SavedTransactions()
+        private static SavedTransactions instance;
+        private SavedTransactions()
         {
             savedTransactions = new List<Transaction>();
-            Console.WriteLine("#####test######");
             ReadWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             ReadWorksheet = ReadWorkbook.Worksheets[1];
             int i = 2;
@@ -55,6 +55,8 @@ namespace WpfApp1
                 savedTransactions.Add(new Transaction(writeoutDate,transactionDate,balance,transactionPrice,accountNumber,description));
                 i++;
             }
+            excel.Workbooks.Close();
+            excel.Quit();
         }
         public static List<Transaction> getSavedTransactions()
         {
@@ -66,6 +68,14 @@ namespace WpfApp1
             {
                 savedTransactions.Add(newImported[i]);
             }
+        }
+        public static SavedTransactions getInstance()
+        {
+            if(instance==null)
+            {
+                instance = new SavedTransactions();
+            }
+            return instance;
         }
         ~SavedTransactions()
         {
