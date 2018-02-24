@@ -39,7 +39,7 @@ namespace WpfApp1
         {
             get
             {
-                btnCommand = new ButtonCommands(this,folderPath[numberofFile]);
+                btnCommand = new ButtonCommands(this, folderPath[numberofFile]);
                 return btnCommand;
             }
         }
@@ -65,8 +65,8 @@ namespace WpfApp1
             InitializeComponent();
             DataContext = this;
             commentColumnHelp = "Multiple comment columns can be separated by commas!";
-            string [] splitedFileName = folderPath[numberofFile].Split('\\');
-            int lastSplitIndex = splitedFileName.Length-1;
+            string[] splitedFileName = folderPath[numberofFile].Split('\\');
+            int lastSplitIndex = splitedFileName.Length - 1;
             currentFileLabel.Content = "File: " + splitedFileName[lastSplitIndex];
             accountNumberChoices = new List<string>();
             accountNumberChoices.Add("Column");
@@ -83,7 +83,7 @@ namespace WpfApp1
             priceColumnTextBox_2.Visibility = Visibility.Hidden;
             balanceColumnTextBox.Visibility = Visibility.Hidden;
         }
-        public static SpecifiedImport getInstance(List<string> newfoldetPath,MainWindow mainWindow)
+        public static SpecifiedImport getInstance(List<string> newfoldetPath, MainWindow mainWindow)
         {
             if (newfoldetPath != null)
             {
@@ -98,20 +98,20 @@ namespace WpfApp1
         private void accountNumberCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             accountNumberTextBox.Visibility = Visibility.Hidden;
-            accNum_Column=false;
-            accNum_Cell=false;
-            accNum_SheetName=false;
-            if(accountNumberChoice=="Column")
+            accNum_Column = false;
+            accNum_Cell = false;
+            accNum_SheetName = false;
+            if (accountNumberChoice == "Column")
             {
                 accountNumberTextBox.Visibility = Visibility.Visible;
                 accNum_Column = true;
             }
-            else if(accountNumberChoice=="Cell")
+            else if (accountNumberChoice == "Cell")
             {
                 accountNumberTextBox.Visibility = Visibility.Visible;
                 accNum_Cell = true;
             }
-            else if(accountNumberChoice=="Sheet name")
+            else if (accountNumberChoice == "Sheet name")
             {
                 accNum_SheetName = true;
             }
@@ -122,15 +122,15 @@ namespace WpfApp1
         }
         private void priceColumnCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            priceSingleColumn=false;
-            priceMultipleColumn=false;
-            if(priceColumnChoice=="One column")
+            priceSingleColumn = false;
+            priceMultipleColumn = false;
+            if (priceColumnChoice == "One column")
             {
                 priceSingleColumn = true;
                 priceColumnTextBox_1.Visibility = Visibility.Visible;
                 priceColumnTextBox_2.Visibility = Visibility.Hidden;
             }
-            else if(priceColumnChoice== "Income,Spending")
+            else if (priceColumnChoice == "Income,Spending")
             {
                 priceMultipleColumn = false;
                 priceColumnTextBox_1.Visibility = Visibility.Visible;
@@ -142,63 +142,24 @@ namespace WpfApp1
         {
             balanceColumn = false;
             noBalanceColumn = false;
-            if(balanceColumnChoice=="Column")
+            if (balanceColumnChoice == "Column")
             {
                 balanceColumn = true;
                 balanceColumnTextBox.Visibility = Visibility.Visible;
             }
-            else if (balanceColumnChoice=="None")
+            else if (balanceColumnChoice == "None")
             {
                 noBalanceColumn = true;
                 balanceColumnTextBox.Visibility = Visibility.Hidden;
             }
         }
-        public class ButtonCommands : ICommand
+        public void incrementNumberofFile()
         {
-            private SpecifiedImport specifiedImport;
-            private string currentFileName;
-            public ButtonCommands(SpecifiedImport specifiedImport,string fileName)
-            {
-                this.specifiedImport = specifiedImport;
-                currentFileName = fileName;
-                specifiedImport.PropertyChanged += new PropertyChangedEventHandler(test_PropertyChanged);
-            }
-            private void test_PropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (CanExecuteChanged != null)
-                {
-                    CanExecuteChanged(this, EventArgs.Empty);
-                }
-            }
-            public event EventHandler CanExecuteChanged;
-
-            public bool CanExecute(object parameter)
-            {
-                //todo
-                return true;
-            }
-            private void set_textboxes_value_to_zero()
-            {
-                specifiedImport.transactionsRowTextBox.Text = null;
-                specifiedImport.accountNumberTextBox.Text = null;
-                specifiedImport.dateColumnTextBox.Text = null;
-                specifiedImport.priceColumnTextBox_1.Text = null;
-                specifiedImport.priceColumnTextBox_2.Text = null;
-                specifiedImport.balanceColumnTextBox.Text = null;
-                specifiedImport.commentColumnTextBox.Text = null;
-            }
-            public void Execute(object parameter)
-            {
-                Console.WriteLine(currentFileName);
-                List<string> currentFile = new List<string>();
-                currentFile.Add(currentFileName);
-                new ImportReadIn("All", currentFile, specifiedImport.mainWindow, true);
-                specifiedImport.incrementNumberofFile();
-                string []splittedFileName = currentFileName.Split('\\');
-                int lastSplitIndex = splittedFileName.Length-1;
-                specifiedImport.currentFileLabel.Content ="File: "+ splittedFileName[lastSplitIndex];
-                set_textboxes_value_to_zero();
-            }
+            numberofFile++;
+        }
+        public int getCurrentFileIndex()
+        {
+            return numberofFile;
         }
         public bool getAccNum_Column()
         {
@@ -228,9 +189,64 @@ namespace WpfApp1
         {
             return noBalanceColumn;
         }
-        public void incrementNumberofFile()
+        public class ButtonCommands : ICommand
         {
-            numberofFile++;
+            private SpecifiedImport specifiedImport;
+            private string currentFileName;
+            public ButtonCommands(SpecifiedImport specifiedImport,string fileName)
+            {
+                this.specifiedImport = specifiedImport;
+                currentFileName = fileName;
+                specifiedImport.PropertyChanged += new PropertyChangedEventHandler(test_PropertyChanged);
+            }
+            private void test_PropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (CanExecuteChanged != null)
+                {
+                    CanExecuteChanged(this, EventArgs.Empty);
+                }
+            }
+            public event EventHandler CanExecuteChanged;
+
+            public bool CanExecute(object parameter)
+            {
+                //todo
+                return true;
+            }
+            private void set_box_values_to_zero()
+            {
+                specifiedImport.accountNumberCB.SelectedItem = null;
+                specifiedImport.priceColumnCB.SelectedItem = null;
+                specifiedImport.balanceColumnCB.SelectedItem = null;
+
+                specifiedImport.transactionsRowTextBox.Text = null;
+                specifiedImport.accountNumberTextBox.Text = null;
+                specifiedImport.dateColumnTextBox.Text = null;
+                specifiedImport.priceColumnTextBox_1.Text = null;
+                specifiedImport.priceColumnTextBox_2.Text = null;
+                specifiedImport.balanceColumnTextBox.Text = null;
+                specifiedImport.commentColumnTextBox.Text = null;
+            }
+            public void Execute(object parameter)
+            {
+                List<string> currentFile = new List<string>();
+                currentFile.Add(currentFileName);
+                new ImportReadIn("All", currentFile, specifiedImport.mainWindow, true);
+                if (SpecifiedImport.folderPath.Count < specifiedImport.getCurrentFileIndex())
+                {
+                    specifiedImport.incrementNumberofFile();
+                    string nextFileName = SpecifiedImport.folderPath[specifiedImport.getCurrentFileIndex()];
+                    string[] splittedFileName = nextFileName.Split('\\');
+                    int lastSplitIndex = nextFileName.Length - 1;
+                    specifiedImport.currentFileLabel.Content = "File: " + splittedFileName[lastSplitIndex];
+                    set_box_values_to_zero();
+                    StoredColumnChecker columnChecker = new StoredColumnChecker();
+                    columnChecker.getDataTableFromSql(specifiedImport.mainWindow);
+                    columnChecker.setAnalyseWorksheet(nextFileName);
+                    columnChecker.setMostMatchesRow(columnChecker.findMostMatchingRow());
+                    columnChecker.setSpecifiedImportPageTextBoxes();
+                }
+            }
         }
     }
 }

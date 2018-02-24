@@ -1003,14 +1003,15 @@ namespace WpfApp1
                     sqlCommand.Parameters.AddWithValue("@accountNumberPos", accountNumberTextBox);
                 sqlCommand.Parameters.AddWithValue("@dateColumn", dateColumnTextBox);
                 if (isMultiplePriceColumns)
-                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn);
+                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn + "," + secondColumn);
                 else
-                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn+","+secondColumn);
+                    sqlCommand.Parameters.AddWithValue("@priceColumn", firstColumn);
                 if(haveBalanceColumn)
                     sqlCommand.Parameters.AddWithValue("@balanceColumn", balanceColumnTextBox);
                 else
                     sqlCommand.Parameters.AddWithValue("@balanceColumn", "None");
                 sqlCommand.Parameters.AddWithValue("@commentColumn", commentColumnTextbox);
+                sqlCommand.ExecuteNonQuery();
             }
         }
         public static int ExcelColumnNameToNumber(string columnName)

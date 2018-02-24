@@ -263,22 +263,6 @@ namespace WpfApp1
                 //todo
                 return true;
             }
-            public static int ExcelColumnNameToNumber(string columnName)
-            {
-                if (string.IsNullOrEmpty(columnName)) throw new ArgumentNullException("columnName");
-
-                columnName = columnName.ToUpperInvariant();
-
-                int sum = 0;
-
-                for (int i = 0; i < columnName.Length; i++)
-                {
-                    sum *= 26;
-                    sum += (columnName[i] - 'A' + 1);
-                }
-
-                return sum;
-            }
             private void check_if_csv(int fileIndex, Microsoft.Win32.OpenFileDialog dialog)
             {
                 string[] fileName = dialog.FileNames.ToList()[fileIndex].Split('\\');
@@ -317,147 +301,6 @@ namespace WpfApp1
                     dialog.FileNames[fileIndex] = newExcelPath; //overwriting the old string
                 }
             }
-            public System.Data.DataTable checkIfFileInformationStored(string filePath)
-            {
-                Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
-                Workbook workbook = excel.Workbooks.Open(filePath);
-                Worksheet worksheet = workbook.Worksheets[1];
-                SqlConnection sqlConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ImportFileData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-                sqlConn.Open();
-                string getEveryRow = "Select * From [StoredColumns]";
-                SqlDataAdapter sda = new SqlDataAdapter(getEveryRow, sqlConn);
-                System.Data.DataTable dtb = new System.Data.DataTable();
-                sda.Fill(dtb);
-                if (dtb.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dtb.Rows)
-                    {
-                        int trasactionsRow = int.Parse(row["TransStartRow"].ToString());
-                        string accountNumberPosString = row["AccountNumberPos"].ToString();
-                        string dateColumnString = row["DateColumn"].ToString();
-                        string priceColumnString = row["PriceColumn"].ToString();
-                        string balanceColumnString = row["BalanceColumn"].ToString();
-                        string commentColumnString = row["CommentColumn"].ToString();
-
-                        int dateColumn;
-                        try
-                        {
-                            dateColumn=int.Parse(dateColumnString);
-                        }
-                        catch(Exception e)
-                        {
-                            dateColumn=ExcelColumnNameToNumber(dateColumnString);
-                        }
-                        int balanceColumn=-1;
-                        if(dateColumnString!="None")
-                        {
-                            try
-                            {
-                                balanceColumn = int.Parse(balanceColumnString);
-                            }
-                            catch (Exception e)
-                            {
-                                balanceColumn = ExcelColumnNameToNumber(balanceColumnString);
-                            }
-                        }
-                        List<int> accountNumberPos = new List<int>(); 
-                        // if it has 2 elements its in a cell
-                        // if it has 1 element it is a column
-                        if(accountNumberPosString!="Sheet name")
-                        {
-                            int tempValue1=0;
-                            long size = sizeof(char) * accountNumberPosString.Length;
-                            //todo
-                            if(size>1)//its a cell 
-                            {
-                                int tempValue2 = 0;
-                                try
-                                {
-                                    tempValue1 = int.Parse(accountNumberPosString[1].ToString());
-                                }
-                                catch(Exception e)
-                                {
-                                    tempValue1 = ExcelColumnNameToNumber(accountNumberPosString[1].ToString());
-                                }
-                                try
-                                {
-                                    tempValue2 = int.Parse(accountNumberPosString[0].ToString());
-                                }
-                                catch (Exception e)
-                                {
-                                    tempValue2 = ExcelColumnNameToNumber(accountNumberPosString[0].ToString());
-                                }
-                                accountNumberPos.Add(tempValue1);
-                                accountNumberPos.Add(tempValue2);
-                            }
-                            else if(size == 1)
-                            {
-                                try
-                                {
-                                    tempValue1 = int.Parse(accountNumberPosString);
-                                }
-                                catch (Exception e)
-                                {
-                                    balanceColumn = ExcelColumnNameToNumber(accountNumberPosString);
-                                }
-                                accountNumberPos.Add(tempValue1);
-                            }
-                        }
-                        else
-                        {
-                            accountNumberPos = null;
-                        }
-                        List<int> commentColumns = new List<int>();
-                        string[] commentColumnsSplitted = commentColumnString.Split(',');
-                        for(int i=0;i<commentColumnsSplitted.Length;i++)
-                        {
-                            int tempValue;
-                            try
-                            {
-                                tempValue = int.Parse(commentColumnsSplitted[i]);
-                            }
-                            catch(Exception e )
-                            {
-                                tempValue = ExcelColumnNameToNumber(commentColumnsSplitted[i]);
-                            }
-                            commentColumns.Add(tempValue);
-                        }
-                        List<int> priceColumn = new List<int>();
-                        string[] priceColumnsSplitted = priceColumnString.Split(',');
-                        if(priceColumnsSplitted.Length>1)
-                        {
-                            for (int i = 0; i < priceColumnsSplitted.Length; i++)
-                            {
-                                int tempValue;
-                                try
-                                {
-                                    tempValue = int.Parse(priceColumnsSplitted[i]);
-                                }
-                                catch (Exception e)
-                                {
-                                    tempValue = ExcelColumnNameToNumber(priceColumnsSplitted[i]);
-                                }
-                                priceColumn.Add(tempValue);
-                            }
-                        }
-                        else
-                        {
-                            int tempValue;
-                            try
-                            {
-                                tempValue = int.Parse(priceColumnsSplitted[0]);
-                            }
-                            catch (Exception e)
-                            {
-                                tempValue = ExcelColumnNameToNumber(priceColumnsSplitted[0]);
-                            }
-                            priceColumn.Add(tempValue);
-                        }
-                    }
-                    return dtb;
-                }
-                return null;
-            }
             public void Execute(object parameter)
             {
                 if (buttonContent.Equals("Import Transactions"))
@@ -491,7 +334,11 @@ namespace WpfApp1
                                 int lastPartIndex = fileName.Length - 1; // to see which file the user immporting first
                                 SpecifiedImport.getInstance(dlg.FileNames.ToList(), importPage.mainWindow).setCurrentFileLabel(fileName[lastPartIndex]);
                                 //fájl felismerés
-                                checkIfFileInformationStored(dlg.FileNames.ToList()[0]);
+                                StoredColumnChecker columnChecker = new StoredColumnChecker();
+                                columnChecker.getDataTableFromSql(importPage.mainWindow);
+                                columnChecker.setAnalyseWorksheet(dlg.FileNames.ToList()[0]);
+                                columnChecker.setMostMatchesRow(columnChecker.findMostMatchingRow());
+                                columnChecker.setSpecifiedImportPageTextBoxes();
                                 importPage.mainWindow.MainFrame.Content = SpecifiedImport.getInstance(dlg.FileNames.ToList(), importPage.mainWindow);
                             }
                         }
