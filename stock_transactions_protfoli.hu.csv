@@ -1,0 +1,9 @@
+﻿Piaci;Termék;Számla;Értéknap;Kereskedés;Mennyiség;Ár;Végrehajtás ideje;Felhasználó;Costs;Tőzsde;Szektor;Pozíció azonosítója;Megbízási azonosító
+27-febr.-2018;;;;;;;;;;;;;
+Stock;Coca-Cola Co.;8442021;01-márc.-2018;Eladott;5;"44,13";14:30:00;8442021;"15,01 USD";NYSE;Beverages;194174079;71239526
+26-febr.-2018;;;;;;;;;;;;;
+Stock;Apple Inc.;8442021;28-febr.-2018;Vásárolt;10;"177,69";15:00:19;8442021;"15,00 USD";NASDAQ;Technology Hardware & Equipment;193880587;71231092
+Stock;Coca-Cola Co.;8442021;28-febr.-2018;Vásárolt;5;"44,04";14:34:03;8442021;"15,00 USD";NYSE;Beverages;193810957;71203823
+Stock;Continental AG;8442021;28-febr.-2018;Eladott;1;"228,00";9:46:33;8442021;"12,00 EUR";FSE;Automobiles & Parts;193338409;71224267
+Stock;Deutsche Lufthansa AG;8442021;28-febr.-2018;Vásárolt;5;"27,32";8:53:39;8442021;"12,00 EUR";FSE;Travel & Leisure;193336913;71224173
+Stock;Continental AG;8442021;28-febr.-2018;Vásárolt;1;"228,70";8:52:50;8442021;"12,00 EUR";FSE;Automobiles & Parts;193336907;71223767
