@@ -231,7 +231,7 @@ namespace WpfApp1
             {
                 List<string> currentFile = new List<string>();
                 currentFile.Add(currentFileName);
-                new ImportReadIn("All", currentFile, specifiedImport.mainWindow, true);
+                new ImportReadIn("Bank", currentFile, specifiedImport.mainWindow, true);
                 if (SpecifiedImport.folderPath.Count < specifiedImport.getCurrentFileIndex())
                 {
                     specifiedImport.incrementNumberofFile();

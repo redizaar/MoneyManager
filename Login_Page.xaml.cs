@@ -40,9 +40,7 @@ namespace WpfApp1
             {
                 User currentUser = new User();
                 currentUser.setUsername(usernameTextbox.Text.ToString());
-                currentUser.setAccountNumber("11773470-00817789");//todo
-                //currentUser.setAccountNumber(dtb.Rows[0][2].ToString());
-
+                currentUser.setAccountNumber(dtb.Rows[0][2].ToString());
                 mainWindow.currentUserLabel.Content = currentUser.getUsername(); //notification label
                 //todo account-number
                 //it's overwriten automatically in MainWindows constructor

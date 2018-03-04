@@ -13,10 +13,10 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         private ButtonCommands btnCommand;
-        private List<Transaction> tableAttributes=null;
+        //private List<Transaction> tableAttributes=null;
         private bool newImport = false;
         public User currentUser;
-        private string accountNumber= "11773470-00817789";
+        private string accountNumber= " ";
         public Stopwatch webStockStopwatch=new Stopwatch();
         public MainWindow()
         {
@@ -31,16 +31,18 @@ namespace WpfApp1
         {
             currentUser = user;
         }
+        /*
         public void setTableAttributes(List<Transaction> impoertedTransactions,string accountNumber)
         {
-            this.tableAttributes = impoertedTransactions;
+            tableAttributes = impoertedTransactions;
             this.accountNumber = accountNumber;
         }
         public void setTableAttributes(List<Transaction> impoertedTransactions,bool newImport)
         {
-            this.tableAttributes = impoertedTransactions;
+            tableAttributes = impoertedTransactions;
             newImport = true;
         }
+        */
         public bool getNewImport()
         {
             return newImport;
@@ -49,10 +51,12 @@ namespace WpfApp1
         {
             return accountNumber;
         }
+        /*
         public List<Transaction> getTableAttributes()
         {
             return tableAttributes;
         }
+        */
         public User getCurrentUser()
         {
             return currentUser;
@@ -145,13 +149,15 @@ namespace WpfApp1
             mainWindow.portfolioMenuTop.Visibility = System.Windows.Visibility.Hidden;
             if (buttonContent.Equals("Import"))
             {
+                ImportMainPage.getInstance(mainWindow).setUserStatistics(mainWindow.getCurrentUser());
                 mainWindow.MainFrame.Content = ImportMainPage.getInstance(mainWindow);
                 mainWindow.importMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.importDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
             }
            else if(buttonContent.Equals("Database"))
            {
-                mainWindow.MainFrame.Content=TransactionMain.getInstance(mainWindow, mainWindow.getTableAttributes(), mainWindow.getAccounNumber());
+                TransactionMain.getInstance(mainWindow).setTableAttributes();
+                mainWindow.MainFrame.Content=TransactionMain.getInstance(mainWindow);
                 mainWindow.tableMenuTop.Visibility = System.Windows.Visibility.Visible;
                 mainWindow.tableDock.Background = new SolidColorBrush(Color.FromRgb(198, 61, 15));
            }

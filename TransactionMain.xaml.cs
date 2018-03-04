@@ -17,23 +17,29 @@ namespace WpfApp1
 {
     public partial class TransactionMain : Page
     {
-        private List<Transaction> tableAttribues;
         public List<string> categoryName { get; set; }
         private static TransactionMain instance;
-
-        private TransactionMain(MainWindow mainWindow,List<Transaction> tableAttribues, string accountNumber)
+        private List<Transaction> tableAttributes;
+        private MainWindow mainWindow;
+        private TransactionMain(MainWindow _mainWindow)
         {
-            this.DataContext = this;
+            mainWindow = _mainWindow;
+            DataContext = this;
             InitializeComponent();
+        }
+        public void setTableAttributes()
+        {
             if (TransactionTableXAML != null)
             {
                 TransactionTableXAML.Items.Clear();
             }
-            if (tableAttribues != null && tableAttribues!=this.tableAttribues)
+            List<Transaction> _tableAttribues = SavedTransactions.getSavedTransactions();
+            if (_tableAttribues != null)
             {
-                foreach (var transaction in tableAttribues)
+                tableAttributes = _tableAttribues;
+                foreach (var transaction in _tableAttribues)
                 {
-                    if (transaction.getWriteDate() != null && transaction.getWriteDate().Length>=12)
+                    if (transaction.getWriteDate() != null && transaction.getWriteDate().Length >= 12)
                     {
                         transaction.setWriteDate(transaction.getWriteDate().Substring(0, 12));
                     }
@@ -42,71 +48,26 @@ namespace WpfApp1
                         transaction.setWriteDate(DateTime.Now.ToString("yyyy/MM/dd"));
                     }
                 }
-            }
-            else if(tableAttribues==null)
-            {
-                foreach (var transaction in SavedTransactions.getSavedTransactions())
-                {
-                    if (transaction.getWriteDate() != null && transaction.getWriteDate().Length != 12)
-                    {
-                        transaction.setWriteDate(transaction.getWriteDate().Substring(0, 12));
-                    }
-                    else
-                    {
-                        transaction.setWriteDate(DateTime.Now.ToString("yyyy/MM/dd"));
-                    }
-                }
-            }
-            if ((this.tableAttribues != tableAttribues) && (tableAttribues != null))
-            {
-                this.tableAttribues = tableAttribues;
-                if (accountNumber.Equals(""))
-                {
-                    addAtribuesToTable(); //we have imported and saved files in this case
-                                         //the accountNumber is already matching
-                }
-                else
-                {
-                    addAtribuesToTable(accountNumber);
-                }
-            }
-            else
-            {
-                addAtribuesToTable(accountNumber);
-            }
-        }
-        private void addAtribuesToTable(String accountNumber)
-        {
-            if (accountNumber.Equals("empty"))//only imported files
-            {
-                foreach (var attribute in tableAttribues)
-                {
-                    TransactionTableXAML.Items.Add(attribute);
-                }
-            }
-            else
-            {
-                foreach (var attribute in SavedTransactions.getSavedTransactions())
-                {
-                    if (attribute.getAccountNumber().Equals(accountNumber))//only saved files
-                    {
-                        TransactionTableXAML.Items.Add(attribute);
-                    }
-                }
+                addAtribuesToTable();
             }
         }
         private void addAtribuesToTable()
         {
-            foreach (var attribute in tableAttribues)
+            foreach (var attribute in tableAttributes)
             {
-                TransactionTableXAML.Items.Add(attribute);
+                string[] splittedAccountNumbers = mainWindow.getCurrentUser().getAccountNumber().Split(',');
+                for (int i = 0; i < splittedAccountNumbers.Length; i++)
+                {
+                    if (attribute.getAccountNumber() == splittedAccountNumbers[i])
+                        TransactionTableXAML.Items.Add(attribute);
+                }
             }
         }
-        public static TransactionMain getInstance(MainWindow mainWindow,List<Transaction> attributes,string accountnumber)
+        public static TransactionMain getInstance(MainWindow mainWindow)
         {
             if(instance==null)
             {
-                instance = new TransactionMain(mainWindow,attributes,accountnumber);
+                instance = new TransactionMain(mainWindow);
             }
             return instance;
         }

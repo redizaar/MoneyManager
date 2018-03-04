@@ -82,7 +82,7 @@ namespace WpfApp1
                 {
 
                 }
-                ImportMainPage.getInstance(mainWindow).getUserStatistics(importerAccountNumber);
+                ImportMainPage.getInstance(mainWindow).setUserStatistics(mainWindow.getCurrentUser());
             }
             else
             {
@@ -103,7 +103,7 @@ namespace WpfApp1
             sqlThread.Start();
             sqlThread.Join();
             mainWindow.setAccountNumber(importerAccountNumber);
-            if (savedTransactions.Count != 0)//if the export file is not empty we scan it
+            if (savedTransactions.Count != 0)//if the export file was not empty we scan the list
             {
                 List<Transaction> tempTransactions = new List<Transaction>();
                 foreach (var saved in savedTransactions)
@@ -131,7 +131,7 @@ namespace WpfApp1
                                 redundant = true;
                                 if (ImportMainPage.getInstance(mainWindow).alwaysAsk==true)
                                 {
-                                    if (MessageBox.Show("This transaction is most likely to be in your Databse already!\n -- Transaction date: " + imported.getTransactionDate() + "\n-- Transaction price: " + imported.getTransactionPrice()
+                                    if (MessageBox.Show("This transaction is most likely to be in the Databse already!\n -- Transaction date: " + imported.getTransactionDate() + "\n-- Transaction price: " + imported.getTransactionPrice()
                                         + "\n-- Imported on: " + saved.getWriteDate().Substring(0,12)+"\nWould you like to import it anyways?",
                                      "Imprt alert!",
                                         MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -153,9 +153,10 @@ namespace WpfApp1
                         }
                     }
                     logFile.Close();
+                    /*
                     if(neededTransactions.Count==0)
                     {
-                        mainWindow.setTableAttributes(savedTransactions, importerAccountNumber);
+                        //mainWindow.setTableAttributes(savedTransactions, importerAccountNumber);
                         //only pass the saved transactions because we didn't add new
                         //and the accountNumber so we can select it by user
                     }
@@ -173,8 +174,9 @@ namespace WpfApp1
                         {
                             savedAndImported.Add(attribue);
                         }
-                        mainWindow.setTableAttributes(savedAndImported,true);
+                        //mainWindow.setTableAttributes(savedAndImported,true);
                     }
+                    */
                     if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transaction(s)!\n" +
                         "("+(tempTransactions.Count-explicitImported)+" was already imported)", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
@@ -184,8 +186,9 @@ namespace WpfApp1
                     return neededTransactions;
                 }
                 else //nincs olyan elmentett tranzakció aminek az lenne a bankszámlaszáma mint amit importálni akarunk
+                    //tehát az összeset importáljuk
                 {
-                    mainWindow.setTableAttributes(importedTransactions,"empty");
+                    //mainWindow.setTableAttributes(importedTransactions,"empty");
                     if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                     {
@@ -195,8 +198,9 @@ namespace WpfApp1
                 }
             }
             else // még nincs elmentett tranzakció
+                 // tehát az összeset importáljuk
             {
-                mainWindow.setTableAttributes(importedTransactions,"empty");
+                //mainWindow.setTableAttributes(importedTransactions,"empty");
                 if (MessageBox.Show("You have imported " + importedTransactions.Count + " new transaction(s)!\n", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                 {
@@ -207,13 +211,50 @@ namespace WpfApp1
         }
         private void writeAccountNumberToSql(string accountNumber)
         {
-            using (SqlConnection sqlConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LoginDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"))
-            using (SqlCommand command = sqlConn.CreateCommand())
+            string storedAccountNumber="-"; //alapértelmezett érték ha valaki regisztrált és még nem importált
+            SqlConnection sqlConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=LoginDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            string accountNumberQuery = "Select * From [UserDatas] where Username = '" + mainWindow.getCurrentUser().getUsername() + "'";
+            SqlDataAdapter sda = new SqlDataAdapter(accountNumberQuery, sqlConn);
+            System.Data.DataTable dtb = new System.Data.DataTable();
+            sda.Fill(dtb);
+            if (dtb.Rows.Count == 1)
             {
-                command.CommandText = "UPDATE UserDatas SET AccountNumber = '"+accountNumber+"' Where Username = '"+mainWindow.getCurrentUser().getUsername()+"'";
-                sqlConn.Open();
-                command.ExecuteNonQuery();
-                sqlConn.Close();
+                foreach(System.Data.DataRow row in dtb.Rows)
+                {
+                    storedAccountNumber = row["AccountNumber"].ToString();
+                }
+            }
+            string []splittedAccountNumber = storedAccountNumber.Split(',');
+            bool stored = false;
+            for (int i = 0; i < splittedAccountNumber.Length; i++)
+            {
+                if (splittedAccountNumber[i]==accountNumber)
+                {
+                    stored = true;
+                    break;
+                }
+            }
+            if (!stored && storedAccountNumber!="-")
+            {
+                storedAccountNumber += "," + accountNumber;
+                using (SqlCommand command = sqlConn.CreateCommand())
+                {
+                    command.CommandText = "UPDATE UserDatas SET AccountNumber = '" + storedAccountNumber + "' Where Username = '" + mainWindow.getCurrentUser().getUsername() + "'";
+                    sqlConn.Open();
+                    command.ExecuteNonQuery();
+                    sqlConn.Close();
+                }
+            }
+            else if(storedAccountNumber=="-")
+            {
+                storedAccountNumber = accountNumber;
+                using (SqlCommand command = sqlConn.CreateCommand())
+                {
+                    command.CommandText = "UPDATE UserDatas SET AccountNumber = '" + storedAccountNumber + "' Where Username = '" + mainWindow.getCurrentUser().getUsername() + "'";
+                    sqlConn.Open();
+                    command.ExecuteNonQuery();
+                    sqlConn.Close();
+                }
             }
         }
         public string geImporterAccountNumber()

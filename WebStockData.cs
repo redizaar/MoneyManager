@@ -92,8 +92,6 @@ namespace WpfApp1
         }
         private void writeStocksToSQL(string ticker,List<string> new_dates,List<double> new_prices)
         {
-            for (int i = 0; i < new_dates.Count; i++)
-                Console.WriteLine(new_dates[i]);
             //elől vannak a friss dátumok, árak
             //atatbázusba nyilván fordítva
             //https://stackoverflow.com/questions/41161104/error-converting-data-type-varchar-to-float-c-sharp-webservice

@@ -10,7 +10,7 @@ namespace WpfApp1
     public class ImportReadIn
     {
         private List<string> path;
-        private string bankName = "";
+        private string importType = "";
         private string currentFileName;
         private MainWindow mainWindow;
         List<Transaction> transactions;
@@ -18,12 +18,12 @@ namespace WpfApp1
         _Application excel = new _Excel.Application();
         Workbook ReadWorkbook;
         Worksheet ReadWorksheet;
-        public ImportReadIn(string bankName, List<string> path,MainWindow mainWindow,bool userSpecified)
+        public ImportReadIn(string _importType, List<string> _path,MainWindow _mainWindow,bool specifiedByUser)
         {
-            this.path = path;
-            this.bankName = bankName;
-            this.mainWindow = mainWindow;
-            if (path[0] != "FolderAdress")//a path wasn't choosen
+            path = _path;
+            importType = _importType;
+            mainWindow = _mainWindow;
+            if (path[0] != "FolderAdress")//a path wasn't choosen, useless ( not in use )
             {
                 for (int i = 0; i < path.Count; i++)
                 {
@@ -32,17 +32,17 @@ namespace WpfApp1
                     currentFileName = splittedFileName[lastSplitIndex];
                     ReadWorkbook = excel.Workbooks.Open(path[i]);
                     ReadWorksheet = ReadWorkbook.Worksheets[1];
-                    if (bankName.Equals("All"))
+                    if (importType=="Bank")
                     {
-                        if (!userSpecified)
+                        if (!specifiedByUser)
                         {
-                            TemplateReadIn templateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet, mainWindow, false);
+                            TemplateBankReadIn templateBank = new TemplateBankReadIn(this, ReadWorkbook, ReadWorksheet, mainWindow, false);
                             //so far we got the Starting Row(of the transactions),Number of Columns, account number
                             templateBank.readOutTransactionColumns(templateBank.getStartingRow(), templateBank.getNumberOfColumns());
                         }
                         else //userSpecified==true
                         {
-                            TemplateReadIn templateBank = new TemplateReadIn(this, ReadWorkbook, ReadWorksheet, mainWindow, true);
+                            TemplateBankReadIn templateBank = new TemplateBankReadIn(this, ReadWorkbook, ReadWorksheet, mainWindow, true);
                             string startingRow = SpecifiedImport.getInstance(null,mainWindow).transactionsRowTextBox.Text.ToString();
                             string dateColumn = SpecifiedImport.getInstance(null,mainWindow).dateColumnTextBox.Text.ToString();
                             string commentColumn = SpecifiedImport.getInstance(null,mainWindow).commentColumnTextBox.Text.ToString();
@@ -52,6 +52,11 @@ namespace WpfApp1
                             string balanceComboBocString = SpecifiedImport.getInstance(null, mainWindow).balanceColumnTextBox.Text.ToString();
                             templateBank.readOutUserspecifiedTransactions(startingRow, dateColumn, commentColumn, accountNumberCB, transactionPriceCB, balanceCB, balanceComboBocString);
                         }
+                    }
+                    else if(importType=="Stock")
+                    {
+                        TemplateStockReadIn templateStock = new TemplateStockReadIn(this,path[i]);
+                        templateStock.analyzeStockTransactionFile();
                     }
                 }
                 excel.Application.Quit();

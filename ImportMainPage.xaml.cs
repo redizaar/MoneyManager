@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -29,7 +30,6 @@ namespace WpfApp1
     {
         private ButtonCommands btnCommand;
         private MainWindow mainWindow;
-        private User currentUser;
         private static ImportMainPage instance;
         public bool alwaysAsk
         {
@@ -79,81 +79,10 @@ namespace WpfApp1
             InitializeComponent();
             neverAskCB.IsChecked = true;
             descriptionComboBox.Visibility = System.Windows.Visibility.Hidden;
-
             this.mainWindow = mainWindow;
-            this.currentUser = mainWindow.getCurrentUser();
-            if (currentUser.getAccountNumber().Equals(mainWindow.getAccounNumber()))
-            {
-                getUserStatistics(currentUser);
-            }
-            else
-            {
-                getUserStatistics(mainWindow.getAccounNumber());
-            }
             FolderAddressLabel.Visibility = System.Windows.Visibility.Hidden;
         }
-        public void getUserStatistics(string accountNumber)
-        {
-            urgencyLabel.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            int totalIncome = 0;
-            int totalSpendings = 0;
-            int numberOfTransactions = 0;
-            string lastImportDate = "";
-            string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
-            DateTime todayDate = Convert.ToDateTime(todaysDate);
-            usernameLabel.Content = "Test";
-            foreach (var transactions in SavedTransactions.getSavedTransactions())
-            {
-                if (transactions.getAccountNumber().Equals(accountNumber))
-                {
-                    numberOfTransactions++;
-                    lastImportDate = transactions.getWriteDate();//always overwrites it --- todo (more logic needed lulz)
-                    if(transactions.getTransactionPrice()>0)
-                    {
-                        totalIncome += transactions.getTransactionPrice();
-                    }
-                    else
-                    {
-                        totalSpendings += transactions.getTransactionPrice();
-                    }
-                }
-            }
-            if (lastImportDate == null)
-            {
-                lastImportDate= DateTime.Now.ToString("yyyy-MM-dd");
-            }
-            if (lastImportDate.Length > 12)
-            {
-                lastImportDateLabel.Content = lastImportDate.Substring(0, 12);
-            }
-            else
-            {
-                lastImportDateLabel.Content = lastImportDate;
-            }
-            noTransactionsLabel.Content = numberOfTransactions;
-            if (lastImportDate.Length > 0)
-            {
-                DateTime importDate = Convert.ToDateTime(lastImportDate);
-                int diffDays = (todayDate - importDate).Days;
-                if (diffDays >= 30)
-                {
-                    urgencyLabel.Content = "Recommended!";
-                    urgencyLabel.Foreground = new SolidColorBrush(Color.FromRgb(217, 30, 24));
-                }
-                else
-                {
-                    urgencyLabel.Content = "Not urgent";
-                    urgencyLabel.Foreground = new SolidColorBrush(Color.FromRgb(46, 204, 113));
-                }
-            }
-            else
-            {
-                urgencyLabel.Content = "You haven't imported yet!";
-                lastImportDateLabel.Content = "You haven't imported yet!";
-            }
-        }
-
-        private void getUserStatistics(User currentUser)
+        public void setUserStatistics(User currentUser)
         {
             int numberOfTransactions = 0;
             int totalIncome = 0;
@@ -167,7 +96,7 @@ namespace WpfApp1
                 if(transactions.getAccountNumber().Equals(currentUser.getAccountNumber()))
                 {
                     numberOfTransactions++;
-                    latestImportDate = transactions.getWriteDate();//always overwrites it --- todo (more logic needed lulz)
+                    latestImportDate = transactions.getWriteDate();//always overwrites it --- todo (more logic)
                     if (transactions.getTransactionPrice() > 0)
                     {
                         totalIncome += transactions.getTransactionPrice();
@@ -211,11 +140,10 @@ namespace WpfApp1
                 lastImportDateLabel.Content = "You haven't imported yet!";
             }
         }
-        private void getTransactions(string bankName, List<string> folderAddress)
+        private void getTransactions(string importType, List<string> folderAddress)
         {
-            new ImportReadIn(bankName, folderAddress, mainWindow,false);
+            new ImportReadIn(importType, folderAddress, mainWindow,false);
         }
-
         public ButtonCommands OpenFilePushed
         {
             get
@@ -263,26 +191,25 @@ namespace WpfApp1
                 //todo
                 return true;
             }
-            private void check_if_csv(int fileIndex, Microsoft.Win32.OpenFileDialog dialog)
+            private void check_if_csv(int fileIndex,ref List<string> fileAddresses)
             {
-                string[] fileName = dialog.FileNames.ToList()[fileIndex].Split('\\');
+                string[] fileName = fileAddresses[fileIndex].Split('\\');
                 int lastPartIndex = fileName.Length - 1;
                 Regex csvPattern = new Regex(@".csv$");
                 if (csvPattern.IsMatch(fileName[lastPartIndex]))
                 {
-                    string newExcelPath = dialog.FileNames[fileIndex].Substring(0, dialog.FileNames[fileIndex].Length - 4);
-                    string csv = dialog.FileNames[fileIndex];
+                    string newExcelPath = fileAddresses[fileIndex].Substring(0, fileAddresses[fileIndex].Length - 4);
                     string xls = newExcelPath + ".xls";
 
                     List<List<string>> allWords = new List<List<string>>();
-                    IEnumerable<String> all_lines = System.IO.File.ReadLines(dialog.FileNames[fileIndex], Encoding.Default);
+                    IEnumerable<String> all_lines = System.IO.File.ReadLines(fileAddresses[fileIndex], Encoding.Default);
                     foreach (var lines in all_lines)
                     {
                         List<string> words = lines.Split(';').ToList();
                         allWords.Add(words);
                     }
                     Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
-                    Workbook wb = app.Workbooks.Open(dialog.FileNames[fileIndex], Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                    Workbook wb = app.Workbooks.Open(fileAddresses[fileIndex], Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                     Worksheet sheet = wb.Worksheets[1];
                     int row = 1;
                     foreach (List<string> lines in allWords)
@@ -298,7 +225,7 @@ namespace WpfApp1
                     wb.SaveAs(newExcelPath, XlFileFormat.xlOpenXMLWorkbook, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                     wb.Close();
                     app.Quit();
-                    dialog.FileNames[fileIndex] = newExcelPath; //overwriting the old string
+                    fileAddresses[fileIndex] = newExcelPath; //overwriting the old string
                 }
             }
             public void Execute(object parameter)
@@ -319,20 +246,20 @@ namespace WpfApp1
                         Nullable<bool> result = dlg.ShowDialog();
                         if (result == true)
                         {
+                            List<string> fileAdresses = dlg.FileNames.ToList();
                             for (int i = 0; i < dlg.FileNames.ToList().Count; i++)
                             {
-                                check_if_csv(i,dlg);
+                                check_if_csv(i,ref fileAdresses);
                             }
-                            //importPage.FolderAddressLabel.Content = dlg.FileName.;
                             if (messageBoxResult == MessageBoxResult.Yes)
                             {
-                                importPage.getTransactions("All", dlg.FileNames.ToList());
+                                importPage.getTransactions("Bank", fileAdresses);
                             }
                             else if (messageBoxResult == MessageBoxResult.No)
                             {
                                 string[] fileName = dlg.FileNames.ToList()[0].Split('\\');
                                 int lastPartIndex = fileName.Length - 1; // to see which file the user immporting first
-                                SpecifiedImport.getInstance(dlg.FileNames.ToList(), importPage.mainWindow).setCurrentFileLabel(fileName[lastPartIndex]);
+                                SpecifiedImport.getInstance(fileAdresses, importPage.mainWindow).setCurrentFileLabel(fileName[lastPartIndex]);
                                 //fájl felismerés
                                 StoredColumnChecker columnChecker = new StoredColumnChecker();
                                 columnChecker.getDataTableFromSql(importPage.mainWindow);
@@ -344,6 +271,120 @@ namespace WpfApp1
                         }
                     }
                 }
+            }
+        }
+        /**
+         * in case if it's a csv we have to overwrite the existing filepath to the new converted excel file string
+         * so we need the original list of strings
+         * that's the reason why it is a reference
+         */ 
+        public void check_if_csv(int fileIndex,ref List<string> fileAddresses)
+        {
+            string[] fileName = fileAddresses[fileIndex].Split('\\');
+            int lastPartIndex = fileName.Length - 1;
+            Regex csvPattern = new Regex(@".csv$");
+            if (csvPattern.IsMatch(fileName[lastPartIndex]))
+            {
+                string newExcelPath = fileAddresses[fileIndex].Substring(0, fileAddresses[fileIndex].Length - 4)+".xls";
+
+                List<List<string>> allWords = new List<List<string>>();
+                List<string> all_lines = System.IO.File.ReadAllLines(fileAddresses[fileIndex], Encoding.Default).ToList();
+                foreach (var lines in all_lines)
+                {
+                    List<string> words = lines.Split(';').ToList();
+                    Regex reg = new Regex("\"([^\"]*?)\"");
+                    for (int i = 0; i < words.Count; i++)
+                    {
+                        /**
+                         * For some reason if there is a Value -> 10,1
+                         * it automatically puts it in quotes  ->"10,1"
+                         * we have to convert it back..
+                         */
+                        if(reg.IsMatch(words[i]))
+                        {
+                            string [] splitted=words[i].Split('"');
+                            string word="";
+                            for(int j=0;j<splitted.Length;j++)
+                            {
+                                word += splitted[j];
+                            }
+                            words[i] = word;
+                        }
+                    }
+                    allWords.Add(words);
+                }
+                Microsoft.Office.Interop.Excel.Application app = new Microsoft.Office.Interop.Excel.Application();
+                Workbook wb = app.Workbooks.Open(fileAddresses[fileIndex], Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                Worksheet sheet = wb.Worksheets[1];
+                int row = 1;
+                foreach (List<string> lines in allWords)
+                {
+                    int column = 1;
+                    for (int itr = 0; itr < lines.Count; itr++)
+                    {
+                        sheet.Cells[row, column].Value = lines[itr];
+                        column++;
+                    }
+                    row++;
+                }
+                wb.SaveAs(newExcelPath, XlFileFormat.xlOpenXMLWorkbook, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                wb.Close();
+                app.Quit();
+                fileAddresses[fileIndex] = newExcelPath; //overwriting the old path string
+            }
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".xls,.csv";
+            dlg.Filter = "Excel files (*.xls)|*.xls|Excel Files (*.xlsx)|*.xlsx|Excel Files (*.xlsm)|*.xlsm|CSV Files (*.csv)|*.csv";
+            dlg.Multiselect = true;
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                List<string> fileAdresses = dlg.FileNames.ToList();
+                for(int i=0;i<dlg.FileNames.ToList().Count;i++)
+                {
+                    check_if_csv(i,ref fileAdresses);
+                }
+                new ImportReadIn("Stock", fileAdresses, mainWindow, false);
+                //var Lines = System.IO.File.ReadLines(dlg.FileNames[0], Encoding.Default).Select(a => a.Split(';'));
+                /*
+                string textToSearch = "Coca-Cola Co.";
+                int lineIndex = all_lines.Select((l, ix) => new { line = l, index = ix })
+                    .FirstOrDefault(l => l.line.Contains(textToSearch)).index;
+                int columnIndex = all_lines[lineIndex].Split(';').Select((c, ix) => new { col = c, index = ix })
+                    .FirstOrDefault(c => c.col.Contains(textToSearch)).index;
+
+
+                Console.WriteLine("Row: {0} , Column: {1}", lineIndex, columnIndex);
+                foreach (var lines in all_lines)
+                {
+                    string[] splittedLine=lines.Split(';');
+                    for(int i=0;i<splittedLine.Length;i++)
+                    {
+                        if(splittedLine[i]!="")
+                        {
+                        }
+                    }
+                }
+                //new ImportReadIn("Stock", dlg.FileNames.ToList(), mainWindow, false);
+                string companyNamesInCSV;
+                using (var web = new WebClient())
+                {
+                    var url = $"http://www.nasdaq.com/screening/companies-by-industry.aspx?render=download";
+                    companyNamesInCSV = web.DownloadString(url);
+                }
+                Regex reg = new Regex("\"([^\"]*?)\"");
+                var matches = reg.Matches(companyNamesInCSV).
+                    Cast<Match>()
+                    .Select(m => m.Value)
+                    .ToArray(); ;
+                for(int i=9;i<matches.Length;i+=9)
+                {
+                    Console.WriteLine("Ticker: {0} -> Company name :{1} ", matches[i], matches[i + 1]);
+                }
+                */
             }
         }
     }

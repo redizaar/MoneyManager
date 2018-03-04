@@ -214,5 +214,6 @@
         <Label Content="On repeating transactions : " HorizontalAlignment="Left" Margin="237,131,0,0" VerticalAlignment="Top" FontSize="15" FontWeight="Medium"/>
         <RadioButton x:Name="alwaysAskCB" Content="Always ask" HorizontalAlignment="Left" Margin="440,140,0,0" VerticalAlignment="Top" IsChecked="{Binding alwaysAsk, Mode=OneWayToSource}"/>
         <RadioButton x:Name="neverAskCB"  Content="Never ask" HorizontalAlignment="Left" Margin="529,140,0,0" VerticalAlignment="Top" IsChecked="{Binding neverAsk, Mode=OneWayToSource}"/>
+        <Button Content="Import Stock data" HorizontalAlignment="Left" Margin="50,58,0,0" VerticalAlignment="Top" Width="150" Height="50" Click="Button_Click"/>
     </Grid>
 </Page>
