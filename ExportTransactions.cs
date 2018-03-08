@@ -34,7 +34,7 @@ namespace WpfApp1
             MessageBox.Show("Exporting data from: " + currentFileName, "", MessageBoxButton.OK);
                                                     //BUT FIRST - check if the transaction is already exported or not 
             List<Transaction> neededTransactions = newTransactions(transactions);
-            SavedTransactions.addToSavedTransactions(neededTransactions);//adding the freshyl imported transactions to the saved 
+            SavedTransactions.addToSavedTransactionsBank(neededTransactions);//adding the freshyl imported transactions to the saved 
             WriteWorkbook = excel.Workbooks.Open(@"C:\Users\Tocki\Desktop\Kimutatas.xlsx");
             WriteWorksheet = WriteWorkbook.Worksheets[1];
             if (neededTransactions != null)
@@ -91,7 +91,7 @@ namespace WpfApp1
         }
         private List<Transaction> newTransactions(List<Transaction> importedTransactions) //check if the transaction is already exported or not
         {
-            List<Transaction> savedTransactions = SavedTransactions.getSavedTransactions();
+            List<Transaction> savedTransactions = SavedTransactions.getSavedTransactionsBank();
             List<Transaction> neededTransactions=new List<Transaction>();
             importerAccountNumber = importedTransactions[0].getAccountNumber();//account number is the same for all
             ThreadStart threadStart = delegate
@@ -153,30 +153,6 @@ namespace WpfApp1
                         }
                     }
                     logFile.Close();
-                    /*
-                    if(neededTransactions.Count==0)
-                    {
-                        //mainWindow.setTableAttributes(savedTransactions, importerAccountNumber);
-                        //only pass the saved transactions because we didn't add new
-                        //and the accountNumber so we can select it by user
-                    }
-                    else
-                    {
-                        //we pass both the saved and the new transcations
-                        List<Transaction> savedAndImported=new List<Transaction>();
-
-                        //tempTrancations containts saved Transactions where the accountnumber matches with the imported Transactions
-                        foreach (var attribue in tempTransactions)
-                        {
-                            savedAndImported.Add(attribue);
-                        }
-                        foreach (var attribue in neededTransactions)
-                        {
-                            savedAndImported.Add(attribue);
-                        }
-                        //mainWindow.setTableAttributes(savedAndImported,true);
-                    }
-                    */
                     if (MessageBox.Show("You have imported "+neededTransactions.Count+" new transaction(s)!\n" +
                         "("+(tempTransactions.Count-explicitImported)+" was already imported)", "Import alert!",
                          MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
@@ -256,6 +232,10 @@ namespace WpfApp1
                     sqlConn.Close();
                 }
             }
+        }
+        public ExportTransactions(List<Stock> transactions, MainWindow mainWindow,string currentFileName)
+        {
+
         }
         public string geImporterAccountNumber()
         {
