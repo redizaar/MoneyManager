@@ -127,15 +127,19 @@ namespace WpfApp1
                 }
                 dtb.AcceptChanges();
             }
-            addAttributesToTable(tableAttributes);
+            addAtributesToTable(tableAttributes);
         }
-        private void addAttributesToTable(List<Stock> tableAttributes)
+        private void addAtributesToTable(List<Stock> tableAttributes)
         {
-            storedStockDataGrid.Items.Clear();
-            foreach (var attribute in tableAttributes)
-                storedStockDataGrid.Items.Add(attribute);
+            //because sortDates in order runs from a different thread
+            //a different thread owns it
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                storedStockDataGrid.Items.Clear();
+                foreach (var attribute in tableAttributes)
+                    storedStockDataGrid.Items.Add(attribute);
+            }));
         }
-
         private void switchToTable_Click(object sender, RoutedEventArgs e)
         {
             mainWindow.MainFrame.Content = new StockChart(mainWindow);
