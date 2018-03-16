@@ -230,7 +230,7 @@
                 <Label Content="Típus oszlop: " Style="{StaticResource myLabelStyle}"/>
                 <TextBox x:Name="transactionTypeTextBox" Style="{StaticResource labelUnderBorderStyle}" HorizontalAlignment="Left"/>
             </DockPanel>
-            <Button  Content="Read in Transactions" Width="150" Height="45"  Style="{StaticResource importButtonStyle}" FontFamily="Maiandra GD" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+            <Button  Content="Read in Transactions" Width="150" Height="45"  Style="{StaticResource importButtonStyle}" FontFamily="Maiandra GD" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding importPushed}"/>
         </StackPanel>
     </Grid>
 </Page>
